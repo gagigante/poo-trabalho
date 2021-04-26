@@ -5,6 +5,8 @@
  */
 package ifnet;
 
+import java.util.Scanner;
+
 /**
  *
  * @author gabriel
@@ -15,7 +17,17 @@ public class IFNet {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Scanner scanner = new Scanner(System.in);
+        
+        String nome;
+               
+        while (true) {
+            System.out.println("Selecione uma opção:\n\n");
+            System.out.println("1 - Cadastrar usuário");
+            System.out.println("2 - Cadastrar disciplina");
+            
+            scanner.next();
+        }
     }
     
 }

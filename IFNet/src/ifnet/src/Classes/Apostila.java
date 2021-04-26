@@ -3,14 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ifnet.src;
+package ifnet.src.Classes;
 
 /**
  *
  * @author gabriel
  */
-public class Professor extends Usuario {
+public class Apostila extends Material {
     private String area;
+
+    public Apostila(String area, String titulo, String categoria, Usuario usuario) {
+        super(titulo, categoria, usuario);
+        
+        this.area = area;
+    }
 
     public String getArea() {
         return area;
@@ -18,11 +24,5 @@ public class Professor extends Usuario {
 
     public void setArea(String area) {
         this.area = area;
-    }
-    
-    public Professor(String nome, String prontuario, String email, String area) {
-        super(nome, prontuario, email);
-        
-        this.setArea(area);
     }
 }

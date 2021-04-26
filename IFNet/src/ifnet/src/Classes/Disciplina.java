@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ifnet.src;
+package ifnet.src.Classes;
 
 /**
  *
  * @author gabriel
  */
-public class Disciplina {
+public class Disciplina implements Comparable<Disciplina>{
     private String nome;
     private int Semestre;
     private String sigla;
@@ -43,6 +43,9 @@ public class Disciplina {
     public void setSigla(String sigla) {
         this.sigla = sigla;
     }
-    
-    
+
+    @Override
+    public int compareTo(Disciplina disciplina) {
+        return this.getNome().equals(disciplina.getNome()) ? 1 : -1;
+    }
 }
