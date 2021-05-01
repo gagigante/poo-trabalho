@@ -5,6 +5,9 @@
  */
 package ifnet;
 
+import ifnet.Classes.Professor;
+import ifnet.DAO.ProfessorDAO;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -20,14 +23,29 @@ public class IFNet {
         Scanner scanner = new Scanner(System.in);
         
         String nome;
-               
-        while (true) {
-            System.out.println("Selecione uma opção:\n\n");
-            System.out.println("1 - Cadastrar usuário");
-            System.out.println("2 - Cadastrar disciplina");
-            
-            scanner.next();
+        
+        
+        ProfessorDAO professorDAO = new ProfessorDAO();
+        
+        professorDAO.cadastraProfessor("Gabriel", "BP3001234", "ggg@ggg.com", "MAT");
+        
+        ArrayList<Professor> professores = professorDAO.getProfessores();
+        
+        for(Professor professor: professores) {
+            System.out.println("gabriel");
         }
+
+//        for (Professor professor : professorDAO.getProfessores()) {
+//            System.out.println(professor.getNome());
+//        }
+               
+//        while (true) {
+//            System.out.println("Selecione uma opção:\n\n");
+//            System.out.println("1 - Cadastrar usuário");
+//            System.out.println("2 - Cadastrar disciplina");
+//            
+//            scanner.next();
+//        }
     }
     
 }

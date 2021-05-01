@@ -5,51 +5,68 @@
  */
 package ifnetpoo.Classes;
 
+import ifnetpoo.Interfaces.IMaterial;
+
 /**
  *
  * @author gabriel
  */
-public class Livro extends Material {
-    private String autor;
-    private String numeroDePaginas;
-    private int edicao;
+public class Livro implements IMaterial {
+    private final String titulo;
+    private final String categoria;
+    private final Usuario criador;
+    private final String autor;
+    private final int numeroDePaginas;
+    private final int edicao;
 
     public Livro(
         String titulo, 
         String categoria, 
-        Usuario usuario, 
+        Usuario criador, 
         String autor, 
-        String numeroDePaginas, 
+        int numeroDePaginas,
         int edicao
     ) {
-        super(titulo, categoria, usuario);
         
+        this.titulo = titulo;
+        this.categoria = categoria;
+        this.criador = criador;
         this.autor = autor;
         this.numeroDePaginas = numeroDePaginas;
         this.edicao = edicao;
     }
-
+    
     public String getAutor() {
-        return autor;
+        return this.autor;
     }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
+    
+    public int getNumeroDePaginas() {
+        return this.numeroDePaginas;
     }
-
-    public String getNumeroDePaginas() {
-        return numeroDePaginas;
-    }
-
-    public void setNumeroDePaginas(String numeroDePaginas) {
-        this.numeroDePaginas = numeroDePaginas;
-    }
-
+    
     public int getEdicao() {
-        return edicao;
+        return this.edicao;
     }
 
-    public void setEdicao(int edicao) {
-        this.edicao = edicao;
+    @Override
+    public String getTitulo() {
+        return this.titulo;
     }
+
+    @Override
+    public String getCategoria() {
+        return this.categoria;
+    }
+
+    @Override
+    public Usuario getCriador() {
+        return this.criador;
+    }
+
+    @Override
+    public String getOverviewMaterial() {
+        return "Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Autor: " + this.getAutor()+ "; Número de páginas: " 
+            + this.getNumeroDePaginas() + "; Edição: " + this.getEdicao() + "; Criador: " + this.getCriador();
+    }
+ 
 }

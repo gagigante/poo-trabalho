@@ -5,7 +5,7 @@
  */
 package ifnet.DAO;
 
-import ifnet.src.Classes.Professor;
+import ifnet.Classes.Professor;
 import java.util.ArrayList;
 
 /**
@@ -22,7 +22,7 @@ public class ProfessorDAO {
     public Professor cadastraProfessor(String nome, String prontuario, String email, String area) {
         Professor novoProfessor = new Professor(nome, prontuario, email, area);
         
-        this.professores.add(novoProfessor);
+//        this.professores.add(novoProfessor);
         
         return novoProfessor;
     }

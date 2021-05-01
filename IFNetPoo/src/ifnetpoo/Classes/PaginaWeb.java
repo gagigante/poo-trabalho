@@ -5,25 +5,46 @@
  */
 package ifnetpoo.Classes;
 
+import ifnetpoo.Interfaces.IMaterial;
+
 /**
  *
  * @author gabriel
  */
-public class PaginaWeb extends Material {
-    private String url;
+public class PaginaWeb implements IMaterial {
+    private final String titulo;
+    private final String categoria;
+    private final Usuario criador;
+    private final String url;
 
-    public PaginaWeb(String url, String titulo, String categoria, Usuario usuario) {
-        super(titulo, categoria, usuario);
-        
+    public PaginaWeb(String titulo, String categoria, Usuario criador, String url) {
+        this.titulo = titulo;
+        this.categoria = categoria;
+        this.criador = criador;
         this.url = url;
     }
      
     public String getUrl() {
         return url;
+    }   
+
+    @Override
+    public String getTitulo() {
+        return this.titulo;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    @Override
+    public String getCategoria() {
+        return this.categoria;
     }
-    
+
+    @Override
+    public Usuario getCriador() {
+        return this.criador;
+    }
+
+    @Override
+    public String getOverviewMaterial() {
+        return "Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; URL: " + this.getUrl()+ "; Criador: " + this.getCriador();
+    }
 }

@@ -20,12 +20,22 @@ public class ProfessorDAO {
         return this.professores;
     }
     
+    public Professor buscarProfessorPeloProntuario(String prontuario) {
+        for (Professor professor : this.professores) {
+            if (professor.getProtuario().equals(prontuario)) {
+                return professor;
+            }
+        }
+        
+        throw new Error("Professor não foi encontrado");
+    }
+    
     public Professor cadastraProfessor(String nome, String prontuario, String email, String area) {
         Professor novoProfessor = new Professor(nome, prontuario, email, area);
 
         this.professores.forEach(professor -> {
             if (professor.compareTo(novoProfessor) == 1) {
-                throw new ExcessaoDuplicacao("Já existe um professor com esse prontuário", professor.getProtuario());
+                throw new ExcessaoDuplicacao("Já existe um usuário com esse prontuário", professor.getProtuario());
             };
         });
 

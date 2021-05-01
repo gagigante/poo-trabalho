@@ -11,12 +11,10 @@ package ifnetpoo.Classes;
  */
 public class Disciplina implements Comparable<Disciplina>{
     private String nome;
-    private int Semestre;
     private String sigla;
 
-    public Disciplina(String nome, int Semestre, String sigla) {
+    public Disciplina(String nome, String sigla) {
         this.nome = nome;
-        this.Semestre = Semestre;
         this.sigla = sigla;
     }
 
@@ -26,14 +24,6 @@ public class Disciplina implements Comparable<Disciplina>{
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public int getSemestre() {
-        return Semestre;
-    }
-
-    public void setSemestre(int Semestre) {
-        this.Semestre = Semestre;
     }
 
     public String getSigla() {

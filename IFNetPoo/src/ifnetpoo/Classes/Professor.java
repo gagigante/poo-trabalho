@@ -9,7 +9,7 @@ package ifnetpoo.Classes;
  *
  * @author gabriel
  */
-public class Professor extends Usuario implements Comparable<Professor> {
+public class Professor extends Usuario {
     private String area;
 
     public String getArea() {
@@ -25,13 +25,18 @@ public class Professor extends Usuario implements Comparable<Professor> {
         
         this.setArea(area);
     }
-
+    
     @Override
-    public int compareTo(Professor professor) {
-        if (professor.getProtuario().equals(this.getProtuario())) {
-            return 1;
-        }
-        
-        return 0;
+    public String tipoUsuario() {
+        return "professor";
     }
+
+//    @Override
+//    public int compareTo(Professor professor) {
+//        if (professor.getProtuario().equals(this.getProtuario())) {
+//            return 1;
+//        }
+//        
+//        return 0;
+//    }
 }

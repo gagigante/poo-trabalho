@@ -5,8 +5,8 @@
  */
 package ifnet.DAO;
 
-import ifnet.src.Classes.Aluno;
-import ifnet.src.Classes.Curso;
+import ifnet.Classes.Aluno;
+import ifnet.Classes.Curso;
 import java.util.ArrayList;
 
 /**

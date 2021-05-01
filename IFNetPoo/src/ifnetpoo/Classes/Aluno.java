@@ -33,6 +33,11 @@ public class Aluno extends Usuario {
         this.disciplinas.add(disciplina);
     }
     
+    @Override
+    public String tipoUsuario() {
+        return "aluno";
+    }
+    
     public void removerDisciplina(String nome) {
         
     }

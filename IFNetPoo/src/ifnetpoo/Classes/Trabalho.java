@@ -12,8 +12,8 @@ package ifnetpoo.Classes;
 public class Trabalho extends Grupo {
     private Disciplina diciplina;
 
-    public Trabalho(Disciplina diciplina, String nome, Aluno[] alunos) {
-        super(nome, alunos);
+    public Trabalho(Disciplina diciplina, String nome, Usuario criador) {
+        super(nome, criador);
         
         this.diciplina = diciplina;
     }
@@ -24,5 +24,10 @@ public class Trabalho extends Grupo {
 
     public void setDiciplina(Disciplina diciplina) {
         this.diciplina = diciplina;
+    }
+
+    @Override
+    public String getGrupoOverview() {
+        return "Tipo: Trabalho; Nome: " + this.getNome() + "; Criador: " + this.getCriador().getNome() + "; Disciplina: " + this.getDiciplina().getNome();
     }
 }

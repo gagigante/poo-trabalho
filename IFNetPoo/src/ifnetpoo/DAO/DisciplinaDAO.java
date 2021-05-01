@@ -5,10 +5,28 @@
  */
 package ifnetpoo.DAO;
 
+import ifnetpoo.Classes.Disciplina;
+import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
+import java.util.ArrayList;
+
 /**
  *
  * @author gabri
  */
 public class DisciplinaDAO {
+    private final ArrayList<Disciplina> disciplinas = new ArrayList<>();
     
+     public Disciplina cadastraDisciplina(String nome, String sigla) {
+        Disciplina novaDisciplina = new Disciplina(nome, sigla);
+
+        this.disciplinas.forEach(disciplina -> {
+            if (disciplina.compareTo(novaDisciplina) == 1) {
+                throw new ExcessaoDuplicacao("Já existe uma disciplina com essa sigla", disciplina.getSigla());
+            };
+        });
+
+        this.disciplinas.add(novaDisciplina);
+
+        return novaDisciplina;
+    }
 }

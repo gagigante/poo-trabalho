@@ -5,32 +5,47 @@
  */
 package ifnetpoo.Classes;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author gabriel
  */
 public abstract class Grupo {
-    private String nome;
-    private Aluno[] alunos;
+    private final String nome;    
+    private final ArrayList<Aluno> alunos = new ArrayList<>();
+    private final Usuario criador;
 
-    public Grupo(String nome, Aluno[] alunos) {
+    public Grupo(String nome, Usuario criador) {
         this.nome = nome;
-        this.alunos = alunos;
+        this.criador = criador;
     }
 
     public String getNome() {
-        return nome;
+        return this.nome;
+    }
+    
+     public Usuario getCriador() {
+        return this.criador;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public ArrayList<Aluno> getAlunos() {
+        return this.alunos;
     }
 
-    public Aluno[] getAlunos() {
-        return alunos;
+    public void addAluno(Aluno aluno) {
+        this.alunos.add(aluno);
     }
-
-    public void setAlunos(Aluno[] alunos) {
-        this.alunos = alunos;
+    
+    public int getQuantidadeAlunos() {
+        int cont = 0;
+        
+        for (Aluno aluno : this.alunos) {
+            cont = cont + 1;
+        }
+        
+        return cont;
     }
+    
+    public abstract String getGrupoOverview();
 }

@@ -10,18 +10,20 @@ package ifnetpoo.Classes;
  * @author gabriel
  */
 public class Pesquisa extends Grupo {
-    private Professor orientador;
+    private final Usuario orientador;
 
-    public Pesquisa(Professor orientador, String nome, Aluno[] alunos) {
-        super(nome, alunos);
+    public Pesquisa(Usuario orientador, String nome) {
+        super(nome, orientador);
+        
         this.orientador = orientador;
     }
 
-    public Professor getOrientador() {
+    public Usuario getOrientador() {
         return orientador;
     }
-
-    public void setOrientador(Professor orientador) {
-        this.orientador = orientador;
-    }    
+    
+    @Override
+    public String getGrupoOverview() {
+        return "Tipo: Pesquisa; Nome: " + this.getNome() + "; Criador: " + this.getCriador().getNome() + "; Orientador: " + this.getOrientador().getNome();
+    }
 }

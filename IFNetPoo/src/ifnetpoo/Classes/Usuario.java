@@ -9,7 +9,7 @@ package ifnetpoo.Classes;
  *
  * @author gabriel
  */
-public abstract class Usuario {
+public abstract class Usuario implements Comparable<Usuario>{
     private String nome;
     private String prontuario;
     private String email;
@@ -44,4 +44,13 @@ public abstract class Usuario {
         this.email = email;
     }
     
+    public int compareTo(Usuario usuario) {
+        if (usuario.getProtuario().equals(this.getProtuario())) {
+            return 1;
+        }
+        
+        return 0;
+    }
+    
+     public abstract String tipoUsuario();
 }
