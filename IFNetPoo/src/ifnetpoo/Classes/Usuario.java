@@ -28,7 +28,7 @@ public abstract class Usuario implements Comparable<Usuario>{
         this.nome = nome;
     }
 
-    public String getProtuario() {
+    public String getProntuario() {
         return prontuario;
     }
 
@@ -45,7 +45,7 @@ public abstract class Usuario implements Comparable<Usuario>{
     }
     
     public int compareTo(Usuario usuario) {
-        if (usuario.getProtuario().equals(this.getProtuario())) {
+        if (usuario.getProntuario().equals(this.getProntuario())) {
             return 1;
         }
         

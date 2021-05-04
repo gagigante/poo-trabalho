@@ -15,10 +15,11 @@ public class Aluno extends Usuario {
     private ArrayList<Curso> cursos;
     private ArrayList<Disciplina> disciplinas;
     
-    public Aluno(String nome, String prontuario, String email, ArrayList<Curso> cursos) {
+    public Aluno(String nome, String prontuario, String email, ArrayList<Curso> cursos, ArrayList<Disciplina> disciplinas) {
         super(nome, prontuario, email);
         
         this.cursos = cursos;
+        this.disciplinas = disciplinas;
     }
     
     public ArrayList<Curso> getCursos() {
@@ -31,6 +32,16 @@ public class Aluno extends Usuario {
     
     public void cadastrarDisciplina(Disciplina disciplina) {
         this.disciplinas.add(disciplina);
+    }
+    
+    public ArrayList<Disciplina> getDisciplinas() {
+        return this.disciplinas;
+    }
+    
+    public void imprimeDisciplinas() {
+        disciplinas.forEach(d -> {
+            System.out.println(d.getNome());
+        });
     }
     
     @Override

@@ -165,7 +165,7 @@ public class IFNetPoo {
                     professorDAO.getProfessores().forEach(professor -> {
                         System.out.println("-----------------------------------");
                         System.out.println("Nome: " + professor.getNome());
-                        System.out.println("Prontuário: " + professor.getProtuario());
+                        System.out.println("Prontuário: " + professor.getProntuario());
                         System.out.println("E-mail: " + professor.getEmail());
                         System.out.println("Área: " + professor.getArea());
                     });
@@ -173,6 +173,8 @@ public class IFNetPoo {
                     System.out.println("-----------------------------------\n");
                     break;
                 case "5":
+                    ArrayList<Disciplina> disciplinasAlunos = new ArrayList<Disciplina>();
+                    
                     System.out.println("Digite o nome: ");
                     nome = scanner.next();
                     
@@ -180,7 +182,47 @@ public class IFNetPoo {
                     prontuario = scanner.next();
                     
                     System.out.println("Digite o e-mail: ");
-                    email = scanner.next();                                                
+                    email = scanner.next();
+                    
+                    System.out.println("\n");
+                    
+                    do {           
+                        i = 1;
+                        
+                        System.out.println("-----------------------------------");
+                        System.out.println("0 - Cadastrar uma nova Disciplina");
+                        for (Disciplina d : disciplinaDAO.getDisciplinas()) {
+                            if (!disciplinasAlunos.contains(d)) {
+                                System.out.println(i + " - " + d.getNome());
+                            }
+                            i++;      
+                        }
+                        System.out.println(i + " - Sair");
+                        System.out.println("-----------------------------------\n");
+
+                        System.out.println("Selecione a disciplina: ");
+                        disciplinaSelecionada = scanner.next();
+                        
+                        if (Integer.parseInt(disciplinaSelecionada) == 0) {
+                            try {
+                                System.out.println("Digite o nome da disciplina: ");
+                                disciplina = scanner.next();
+
+                                System.out.println("Digite a sigla da disciplina: ");
+                                siglaDisciplina = scanner.next();
+
+                                disciplinasAlunos.add(disciplinaDAO.cadastraDisciplina(disciplina, siglaDisciplina));
+                            } catch (ExcessaoDuplicacao err) {
+                                System.out.println("\n" + err.getMessage() + "! Valor duplicado: " + err.getValorDuplicado() + "\n");
+                            }
+                        }else{
+                            if (Integer.parseInt(disciplinaSelecionada) > i) {
+                                disciplinasAlunos.add(disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1));
+                            }
+                        }
+                    } while (Integer.parseInt(disciplinaSelecionada) >= 0 && Integer.parseInt(disciplinaSelecionada) < i);
+                                           
+                    alunoDAO.cadastrarAluno(nome, prontuario, email, null, disciplinasAlunos);
                     break;
                 case "6":
                     if (alunoDAO.getAlunos().isEmpty()) {
@@ -192,8 +234,10 @@ public class IFNetPoo {
                     alunoDAO.getAlunos().forEach(aluno -> {
                         System.out.println("-----------------------------------");
                         System.out.println("Nome: " + aluno.getNome());
-                        System.out.println("Prontuário: " + aluno.getProtuario());
+                        System.out.println("Prontuário: " + aluno.getProntuario());
                         System.out.println("E-mail: " + aluno.getEmail());
+                        System.out.println("Disciplinas: ");
+                        aluno.imprimeDisciplinas();
                         System.out.println(": " + aluno.getCursos());
                     });
                     
