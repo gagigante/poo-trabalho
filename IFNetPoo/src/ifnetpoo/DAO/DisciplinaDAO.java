@@ -16,7 +16,21 @@ import java.util.ArrayList;
 public class DisciplinaDAO {
     private final ArrayList<Disciplina> disciplinas = new ArrayList<>();
     
-     public Disciplina cadastraDisciplina(String nome, String sigla) {
+    public ArrayList<Disciplina> getDisciplinas() {
+        return this.disciplinas;
+    }
+    
+    public Disciplina getDisciplinaPorIndex(int index) {
+        int size = this.disciplinas.size();
+        
+        if (index < 0 || index > size - 1) {
+            throw new Error("Disciplina não encontrada");
+        }
+        
+        return this.disciplinas.get(index);
+    }
+    
+    public Disciplina cadastraDisciplina(String nome, String sigla) {
         Disciplina novaDisciplina = new Disciplina(nome, sigla);
 
         this.disciplinas.forEach(disciplina -> {

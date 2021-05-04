@@ -20,11 +20,31 @@ public class PesquisaDAO {
         return this.gruposPesquisa;
     }
     
+     public Pesquisa getGrupoPorIndex(int index) {
+        int size = this.gruposPesquisa.size();
+        
+        if (index < 0 || index > size - 1) {
+            throw new Error("Grupo não encontrado");
+        }
+        
+        return this.gruposPesquisa.get(index); 
+    }
+     
     public Pesquisa criarGrupo(Usuario orientador, String nome) {
         Pesquisa novoGrupo = new Pesquisa(orientador, nome);
         
         this.gruposPesquisa.add(novoGrupo);
         
         return novoGrupo;
+    }
+    
+      public void removerGrupo(int index) {
+        int size = this.gruposPesquisa.size();
+        
+        if (index < 0 || index > size - 1) {
+            throw new Error("Grupo não encontrado");
+        }
+        
+        this.gruposPesquisa.remove(index);
     }
 }

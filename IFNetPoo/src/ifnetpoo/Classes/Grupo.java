@@ -25,18 +25,24 @@ public abstract class Grupo {
         return this.nome;
     }
     
-     public Usuario getCriador() {
+    public Usuario getCriador() {
         return this.criador;
     }
 
     public ArrayList<Aluno> getAlunos() {
         return this.alunos;
     }
-
-    public void addAluno(Aluno aluno) {
+    
+    public void adicionaAlunoNoGrupo(Aluno aluno) {
+        for (Aluno al : this.alunos) {
+            if (al.compareTo(aluno) == 1) {
+                throw new Error("Você já está nesse grupo");
+            }
+        }
+        
         this.alunos.add(aluno);
     }
-    
+
     public int getQuantidadeAlunos() {
         int cont = 0;
         

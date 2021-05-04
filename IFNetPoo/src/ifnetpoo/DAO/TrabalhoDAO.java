@@ -21,6 +21,16 @@ public class TrabalhoDAO {
         return this.gruposTrabalho;
     }
     
+    public Trabalho getGrupoPorIndex(int index) {
+        int size = this.gruposTrabalho.size();
+        
+        if (index < 0 || index > size - 1) {
+            throw new Error("Grupo não encontrado");
+        }
+        
+        return this.gruposTrabalho.get(index); 
+    }
+    
     public Trabalho criarGrupo(Disciplina disciplina, String nome, Usuario criador) {
         Trabalho novoGrupo = new Trabalho(disciplina, nome, criador);
         
@@ -28,4 +38,30 @@ public class TrabalhoDAO {
         
         return novoGrupo;
     }
+    
+    public void removerGrupo(int index) {
+        int size = this.gruposTrabalho.size();
+        
+        if (index < 0 || index > size - 1) {
+            throw new Error("Grupo não encontrado");
+        }
+        
+        this.gruposTrabalho.remove(index);                
+    }
+    
+    public ArrayList<Trabalho> getGruposPorDisciplina(Disciplina disciplina) {
+        ArrayList<Trabalho> gruposFiltrados = new ArrayList<>();
+        
+        for (Trabalho grupo : this.gruposTrabalho) {
+            if (grupo.getDiciplina().compareTo(disciplina) == 1) {
+                gruposFiltrados.add(grupo);
+            }
+        };
+        
+        if (gruposFiltrados.isEmpty()) {
+            throw new Error("Nenhum grupo dessa disciplina foi encontrado");
+        }
+        
+        return gruposFiltrados;
+    }                    
 }
