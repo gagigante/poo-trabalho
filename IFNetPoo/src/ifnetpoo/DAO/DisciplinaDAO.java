@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.DAO;
 
 import ifnetpoo.Classes.Disciplina;
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
+
 import java.util.ArrayList;
 
-/**
- *
- * @author gabri
- */
 public class DisciplinaDAO {
     private final ArrayList<Disciplina> disciplinas = new ArrayList<>();
     
@@ -45,11 +37,7 @@ public class DisciplinaDAO {
     }
     
     public void removerDisciplina(int index) {
-        int size = this.disciplinas.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new Error("Disciplina não encontrada");
-        }
+        this.getDisciplinaPorIndex(index);
         
         this.disciplinas.remove(index);                
     }
