@@ -16,13 +16,14 @@ public class Apostila implements IMaterial {
     private final String categoria;
     private final Usuario criador;
     private final String area;
-//    private final Disciplina disciplina;
+    private final Disciplina disciplina;
     
-    public Apostila(String titulo, String categoria, Usuario criador, String area) {
+    public Apostila(String titulo, String categoria, Usuario criador, String area, Disciplina disciplina) {
         this.titulo = titulo;
         this.categoria = categoria;
         this.criador = criador; 
         this.area = area;
+        this.disciplina = disciplina;
     }
 
     public String getArea() {
@@ -46,7 +47,7 @@ public class Apostila implements IMaterial {
     
     @Override
     public String getOverviewMaterial() {
-        return "Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Área: " + this.getArea() + "; Criador: " + this.getCriador();
+        return "Tipo: " + this.getTipoMaterial() + "; Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Área: " + this.getArea() + "; Criador: " + this.getCriador().getNome();
     }
 
     @Override

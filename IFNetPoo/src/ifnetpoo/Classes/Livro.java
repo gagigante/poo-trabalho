@@ -18,6 +18,7 @@ public class Livro implements IMaterial {
     private final String autor;
     private final int numeroDePaginas;
     private final int edicao;
+    private final Disciplina disciplina;
 
     public Livro(
         String titulo, 
@@ -25,15 +26,16 @@ public class Livro implements IMaterial {
         Usuario criador, 
         String autor, 
         int numeroDePaginas,
-        int edicao
+        int edicao,
+        Disciplina disciplina
     ) {
-        
         this.titulo = titulo;
         this.categoria = categoria;
         this.criador = criador;
         this.autor = autor;
         this.numeroDePaginas = numeroDePaginas;
         this.edicao = edicao;
+        this.disciplina = disciplina;
     }
     
     public String getAutor() {
@@ -65,8 +67,8 @@ public class Livro implements IMaterial {
 
     @Override
     public String getOverviewMaterial() {
-        return "Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Autor: " + this.getAutor()+ "; Número de páginas: " 
-            + this.getNumeroDePaginas() + "; Edição: " + this.getEdicao() + "; Criador: " + this.getCriador();
+        return "Tipo: " + this.getTipoMaterial() + "; Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Autor: " + this.getAutor()+ "; Número de páginas: " 
+            + this.getNumeroDePaginas() + "; Edição: " + this.getEdicao() + "; Criador: " + this.getCriador().getNome();
     }
 
     @Override

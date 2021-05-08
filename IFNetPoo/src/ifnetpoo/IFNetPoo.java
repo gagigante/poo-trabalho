@@ -6,16 +6,22 @@
 package ifnetpoo;
 
 import ifnetpoo.Classes.Aluno;
+import ifnetpoo.Classes.Apostila;
 import ifnetpoo.Classes.Professor;
 import ifnetpoo.Classes.Disciplina;
 import ifnetpoo.Classes.Grupo;
+import ifnetpoo.Classes.Livro;
+import ifnetpoo.Classes.PaginaWeb;
 import ifnetpoo.Classes.Usuario;
+
+import ifnetpoo.Interfaces.IMaterial;
 
 import ifnetpoo.DAO.ProfessorDAO;
 import ifnetpoo.DAO.AlunoDAO;
 import ifnetpoo.DAO.DisciplinaDAO;
 import ifnetpoo.DAO.PesquisaDAO;
 import ifnetpoo.DAO.TrabalhoDAO;
+import ifnetpoo.DAO.MaterialDAO;
 
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
 
@@ -39,6 +45,7 @@ public class IFNetPoo {
         TrabalhoDAO trabalhoDAO = new TrabalhoDAO();
         PesquisaDAO pesquisaDAO = new PesquisaDAO();
         AlunoDAO alunoDAO = new AlunoDAO();
+        MaterialDAO materialDAO = new MaterialDAO();
 
         // temp
         Usuario usuarioLogado = null;
@@ -46,6 +53,7 @@ public class IFNetPoo {
         final ArrayList<Grupo> grupos = new ArrayList<>();
         final ArrayList<Professor> professores = new ArrayList<>();
         final ArrayList<Disciplina> disciplinas = new ArrayList<>();
+        final ArrayList<IMaterial> materiais = new ArrayList<>();
         
         String opcaoSelecionada;
         String grupoSelecinado;
@@ -62,17 +70,19 @@ public class IFNetPoo {
         String tipoGrupo;
         String nomeGrupo;
         
-        Disciplina disciplina;
-        
-        
-     
-        
-        
-      
+        String tipoMaterial;
+        String nomeMaterial;
+        String categoria;
+        String autor;        
+        int numeroDePaginas;
+        int edicao;
+        String url;
         
         String disciplinaSelecionada;
         int i;
         
+        Disciplina disciplina;
+  
         menu: while (true) {
             if (usuarioLogado != null) {
                 System.out.println("\nAutenticado como: " + usuarioLogado.getNome() + "\n");
@@ -386,7 +396,7 @@ public class IFNetPoo {
                     
                     disciplinas.clear();
                     disciplinas.addAll(disciplinaDAO.getDisciplinas());
-                    i = 0;
+                    i = 1;
                     
                     if (disciplinas.isEmpty()) {
                         System.out.println("\nNenhuma disciplina cadastrada\n");
@@ -408,12 +418,6 @@ public class IFNetPoo {
                         disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
                         
                         usuarioLogado.cadastraDisciplina(disciplina);
-                    } catch (Error err) {
-                        System.out.println(err.getMessage());
-                    }
-                     
-                    try {
-                        disciplinaDAO.removerDisciplina(Integer.parseInt(disciplinaSelecionada) - 1);
                     } catch (Error err) {
                         System.out.println(err.getMessage());
                     }
@@ -699,12 +703,197 @@ public class IFNetPoo {
                 }
                 case "20" -> {
                     // CADASTRO DE MATERIAL
+                    if (usuarioLogado == null) {
+                        System.out.println("Você precisa estar autenticado");
+                        break;
+                    }
+                    
+                    tipoMaterial = null;
+                            
+                    do {
+                        System.out.println("Qual é o tipo do material?\n");
+
+                        System.out.println("1 - Livro");
+                        System.out.println("2 - Apostila");
+                        System.out.println("3 - Página WEB");
+
+                        tipoMaterial = scanner.next();
+
+                        if (tipoMaterial != null && !"1".equals(tipoMaterial) && !"2".equals(tipoMaterial) && !"3".equals(tipoMaterial)) {
+                            System.out.println("\nOpção inválida\n");
+                        }
+                    } while (!"1".equals(tipoMaterial) && !"2".equals(tipoMaterial) && !"3".equals(tipoMaterial));
+                    
+                    // LIVRO
+                    if ("1".equals(tipoMaterial)) {
+                        System.out.println("Informe o nome do livro: ");
+                        nomeMaterial = scanner.next();
+                        
+                        System.out.println("Informe a categoria: ");
+                        categoria = scanner.next();
+                        
+                        System.out.println("Informe o autor: ");
+                        autor = scanner.next();
+                        
+                        System.out.println("Informe a quantidade de páginas: ");
+                        numeroDePaginas = Integer.parseInt(scanner.next());
+                        
+                        System.out.println("Informe a edição: ");
+                        edicao = Integer.parseInt(scanner.next());
+                        
+                        disciplinas.clear();
+                        disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                  
+                        if (disciplinas.isEmpty()) {
+                            System.out.println("\nNenhuma disciplina cadastrada\n");
+                        } else {
+                            i = 1;
+
+                            System.out.println("\n\n");
+                            for (Disciplina d : disciplinas) {
+                                System.out.println("-----------------------------------");
+                                System.out.println(i + " - " + d.getNome());
+                                i++;
+                            }                        
+                            System.out.println("-----------------------------------\n");
+                            
+                            System.out.println("Selecione a disciplina: ");
+                            disciplinaSelecionada = scanner.next();                                                        
+                            
+                            try {
+                                disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
+                                
+                                Livro livro = new Livro(nomeMaterial, categoria, usuarioLogado, autor, numeroDePaginas, edicao, disciplina);
+                                
+                                materialDAO.adicionarMaterial(livro);
+                            } catch (Error err) {
+                                System.out.println(err.getMessage());
+                            }
+                        }                        
+                    }
+                    
+                    // APOSTILA
+                    if ("2".equals(tipoMaterial)) {
+                        System.out.println("Informe o nome da apostila: ");
+                        nomeMaterial = scanner.next();
+                        
+                        System.out.println("Informe a categoria: ");
+                        categoria = scanner.next();
+                        
+                        System.out.println("Informe a área da apostila: ");
+                        area = scanner.next();
+                        
+                        disciplinas.clear();
+                        disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                  
+                        if (disciplinas.isEmpty()) {
+                            System.out.println("\nNenhuma disciplina cadastrada\n");
+                        } else {
+                            i = 1;
+
+                            System.out.println("\n\n");
+                            for (Disciplina d : disciplinas) {
+                                System.out.println("-----------------------------------");
+                                System.out.println(i + " - " + d.getNome());
+                                i++;
+                            }                        
+                            System.out.println("-----------------------------------\n");
+                            
+                            System.out.println("Selecione a disciplina: ");
+                            disciplinaSelecionada = scanner.next();                                                        
+                            
+                            try {
+                                disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
+                                
+                                Apostila apostila = new Apostila(nomeMaterial, categoria, usuarioLogado, area, disciplina);
+                                
+                                materialDAO.adicionarMaterial(apostila);
+                            } catch (Error err) {
+                                System.out.println(err.getMessage());
+                            }
+                        }
+                    }
+                    
+                    // PÁGINA WEB
+                    if ("3".equals(tipoMaterial)) {
+                        System.out.println("Informe o nome da página: ");
+                        nomeMaterial = scanner.next();
+                        
+                        System.out.println("Informe a categoria: ");
+                        categoria = scanner.next();
+                        
+                        System.out.println("Informe a url da página: ");
+                        url = scanner.next();
+                        
+                        disciplinas.clear();
+                        disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                  
+                        if (disciplinas.isEmpty()) {
+                            System.out.println("\nNenhuma disciplina cadastrada\n");
+                        } else {
+                            i = 1;
+
+                            System.out.println("\n\n");
+                            for (Disciplina d : disciplinas) {
+                                System.out.println("-----------------------------------");
+                                System.out.println(i + " - " + d.getNome());
+                                i++;
+                            }                        
+                            System.out.println("-----------------------------------\n");
+                            
+                            System.out.println("Selecione a disciplina: ");
+                            disciplinaSelecionada = scanner.next();                                                        
+                            
+                            try {
+                                disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
+                                
+                                PaginaWeb web = new PaginaWeb(nomeMaterial, categoria, usuarioLogado, url, disciplina);
+                                
+                                materialDAO.adicionarMaterial(web);
+                            } catch (Error err) {
+                                System.out.println(err.getMessage());
+                            }
+                        }
+                    }
                 }
                 case "21" -> {
-                    // LISTAR MATERIAIS
+                   // EXCLUIR MATERIAL
+                   materiais.clear();
+                   materiais.addAll(materialDAO.getMateriais());
+                  
+                    if (materiais.isEmpty()) {
+                        System.out.println("\nNenhum material cadastrado\n");
+                    } else {
+                        i = 1;
+
+                        System.out.println("\n\n");
+                        for (IMaterial m : materiais) {
+                            System.out.println("-----------------------------------");
+                            System.out.println(i + " - " + m.getOverviewMaterial());
+                            i++;
+                        }                        
+                        System.out.println("-----------------------------------\n");
+                                  
+                        System.out.println("Selecione o material que deseja excluir: ");
+                        grupoSelecinado = scanner.next();
+                            
+                        try {
+                            materialDAO.removerMaterial(Integer.parseInt(grupoSelecinado) - 1);
+                        } catch (Error err) {
+                            System.out.println(err.getMessage());
+                        }
+                    }
                 }
                 case "22" -> {
-                    // EXCLUIR MATERIAL
+                    // LISTAR MATERIAIS
+                    materiais.clear();
+                    materiais.addAll(materialDAO.getMateriais());
+                    
+                    for (IMaterial m : materiais) {
+                        System.out.println("-----------------------------------");
+                        System.out.println(m.getOverviewMaterial());
+                    }
+                    System.out.println("-----------------------------------\n");
                 }
                 case "0" -> {
                     break menu;

@@ -16,12 +16,14 @@ public class PaginaWeb implements IMaterial {
     private final String categoria;
     private final Usuario criador;
     private final String url;
+    private final Disciplina disciplina;
 
-    public PaginaWeb(String titulo, String categoria, Usuario criador, String url) {
+    public PaginaWeb(String titulo, String categoria, Usuario criador, String url, Disciplina disciplina) {
         this.titulo = titulo;
         this.categoria = categoria;
         this.criador = criador;
         this.url = url;
+        this.disciplina = disciplina;
     }
      
     public String getUrl() {
@@ -45,7 +47,7 @@ public class PaginaWeb implements IMaterial {
 
     @Override
     public String getOverviewMaterial() {
-        return "Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; URL: " + this.getUrl()+ "; Criador: " + this.getCriador();
+        return "Tipo: " + this.getTipoMaterial() + "; Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; URL: " + this.getUrl()+ "; Criador: " + this.getCriador().getNome();
     }
 
     @Override
