@@ -242,6 +242,27 @@ public class IFNetPoo {
                 }
                 case "7" -> {
                     // LISTA DE ALUNOS
+                    if (alunoDAO.getAlunos().isEmpty()) {
+                        System.out.println("\nNenhum aluno cadastrado\n");
+                        break;
+                    }
+                   
+                    System.out.println("\n");
+                    alunoDAO.getAlunos().forEach(aluno -> {
+                        System.out.println("-----------------------------------");
+                        System.out.println("Nome: " + aluno.getNome());
+                        System.out.println("Prontuário: " + aluno.getProntuario());
+                        System.out.println("E-mail: " + aluno.getEmail());
+                        System.out.println("Disciplinas: ");
+                        
+                        if (!aluno.getDisciplinas().isEmpty()) {
+                            for (Disciplina dic : aluno.getDisciplinas()) {
+                                System.out.println("- " + dic.getNome());
+                            }                        
+                        }
+                    });
+                    
+                    System.out.println("-----------------------------------\n");
                 }
                 case "8" -> {
                     // EXCLUIR ALUNOS
@@ -300,26 +321,6 @@ public class IFNetPoo {
                                            
                     alunoDAO.cadastrarAluno(nome, prontuario, email, disciplinasAlunos);
                 }
-                case "70" -> {
-                    if (alunoDAO.getAlunos().isEmpty()) {
-                        System.out.println("\nNenhum aluno cadastrado\n");
-                        break;
-                    }
-                   
-                    System.out.println("\n");
-                    alunoDAO.getAlunos().forEach(aluno -> {
-                        System.out.println("-----------------------------------");
-                        System.out.println("Nome: " + aluno.getNome());
-                        System.out.println("Prontuário: " + aluno.getProntuario());
-                        System.out.println("E-mail: " + aluno.getEmail());
-                        System.out.println("Disciplinas: ");
-                        aluno.imprimeDisciplinas();
-                        // System.out.println(": " + aluno.getCursos());
-                    });
-                    
-                    System.out.println("-----------------------------------\n");
-                }
-                
                 
                 case "9" -> {
                     // CADASTRAR DISCIPLINA
@@ -763,7 +764,7 @@ public class IFNetPoo {
                             try {
                                 disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
                                 
-                                Livro livro = new Livro(nomeMaterial, categoria, usuarioLogado, autor, numeroDePaginas, edicao, disciplina);
+                                Livro livro = new Livro(nomeMaterial, categoria, usuarioLogado, disciplina, autor, numeroDePaginas, edicao);
                                 
                                 materialDAO.adicionarMaterial(livro);
                             } catch (Error err) {
@@ -888,6 +889,11 @@ public class IFNetPoo {
                     // LISTAR MATERIAIS
                     materiais.clear();
                     materiais.addAll(materialDAO.getMateriais());
+                    
+                    if (materiais.isEmpty()) {
+                        System.out.println("\nNenhum material cadastrado\n");
+                        break;
+                    }
                     
                     for (IMaterial m : materiais) {
                         System.out.println("-----------------------------------");

@@ -1,55 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.Classes;
 
 import ifnetpoo.Interfaces.IMaterial;
 
-/**
- *
- * @author gabriel
- */
 public class Livro implements IMaterial {
     private final String titulo;
     private final String categoria;
     private final Usuario criador;
+    private final Disciplina disciplina;
     private final String autor;
     private final int numeroDePaginas;
     private final int edicao;
-    private final Disciplina disciplina;
 
     public Livro(
         String titulo, 
         String categoria, 
-        Usuario criador, 
+        Usuario criador,
+        Disciplina disciplina,
         String autor, 
         int numeroDePaginas,
-        int edicao,
-        Disciplina disciplina
+        int edicao
     ) {
         this.titulo = titulo;
         this.categoria = categoria;
         this.criador = criador;
+        this.disciplina = disciplina;
         this.autor = autor;
         this.numeroDePaginas = numeroDePaginas;
         this.edicao = edicao;
-        this.disciplina = disciplina;
     }
     
-    public String getAutor() {
-        return this.autor;
-    }
-    
-    public int getNumeroDePaginas() {
-        return this.numeroDePaginas;
-    }
-    
-    public int getEdicao() {
-        return this.edicao;
-    }
-
     @Override
     public String getTitulo() {
         return this.titulo;
@@ -64,15 +43,33 @@ public class Livro implements IMaterial {
     public Usuario getCriador() {
         return this.criador;
     }
+    
+    @Override
+    public Disciplina getDisciplina() {
+        return this.disciplina;
+    }
 
     @Override
     public String getOverviewMaterial() {
-        return "Tipo: " + this.getTipoMaterial() + "; Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Autor: " + this.getAutor()+ "; Número de páginas: " 
-            + this.getNumeroDePaginas() + "; Edição: " + this.getEdicao() + "; Criador: " + this.getCriador().getNome();
+        return "Tipo: " + this.getTipoMaterial() + "; Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() +
+            "; Criador: " + this.getCriador().getNome() + "; Disciplina: " + this.getDisciplina() + "; Autor: " + this.getAutor() + ";" +
+            "; Número de páginas: " + this.getNumeroDePaginas() + "; Edição: " + this.getEdicao();
     }
 
     @Override
     public String getTipoMaterial() {
         return "livro";
+    }
+    
+    public String getAutor() {
+        return this.autor;
+    }
+    
+    public int getNumeroDePaginas() {
+        return this.numeroDePaginas;
+    }
+    
+    public int getEdicao() {
+        return this.edicao;
     }
 }

@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.DAO;
 
 import ifnetpoo.Interfaces.IMaterial;
 import java.util.ArrayList;
 
-/**
- *
- * @author gabri
- */
 public class MaterialDAO {
     private final ArrayList<IMaterial> materiais = new ArrayList<>();
     
@@ -36,11 +27,7 @@ public class MaterialDAO {
     }
     
     public void removerMaterial(int index) {
-        int size = this.materiais.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new Error("Material não encontrada");
-        }
+        this.getMaterialPorIndex(index);
         
         this.materiais.remove(index);                
     }

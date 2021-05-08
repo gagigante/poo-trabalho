@@ -1,34 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.Classes;
 
 import ifnetpoo.Interfaces.IMaterial;
 
-/**
- *
- * @author gabriel
- */
 public class Apostila implements IMaterial {    
     private final String titulo;
     private final String categoria;
     private final Usuario criador;
-    private final String area;
     private final Disciplina disciplina;
+    private final String area;
     
     public Apostila(String titulo, String categoria, Usuario criador, String area, Disciplina disciplina) {
         this.titulo = titulo;
         this.categoria = categoria;
         this.criador = criador; 
-        this.area = area;
         this.disciplina = disciplina;
+        this.area = area;
     }
-
-    public String getArea() {
-        return area;
-    }                 
     
     @Override
     public String getTitulo() {
@@ -46,12 +33,22 @@ public class Apostila implements IMaterial {
     }
     
     @Override
-    public String getOverviewMaterial() {
-        return "Tipo: " + this.getTipoMaterial() + "; Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Área: " + this.getArea() + "; Criador: " + this.getCriador().getNome();
+    public Disciplina getDisciplina() {
+        return this.disciplina;
     }
-
+    
     @Override
-    public String getTipoMaterial() {
+    public  String getTipoMaterial() {
         return "apostila";
     }
+    
+    @Override
+    public String getOverviewMaterial() {
+        return "Tipo: " + this.getTipoMaterial() + "; Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + 
+            "; Criador: " + this.getCriador().getNome() + "; Disciplina: " + this.getDisciplina() + "; Área: " + this.getArea();
+    }
+
+    public String getArea() {
+        return area;
+    }                 
 }

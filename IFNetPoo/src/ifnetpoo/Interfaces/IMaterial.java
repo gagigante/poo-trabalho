@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.Interfaces;
 
+import ifnetpoo.Classes.Disciplina;
 import ifnetpoo.Classes.Usuario;
 
-/**
- *
- * @author gabri
- */
 public interface IMaterial {
     public String getTitulo();
     
@@ -18,7 +10,9 @@ public interface IMaterial {
     
     public Usuario getCriador();
     
-    public String getOverviewMaterial();
+    public Disciplina getDisciplina();
     
     public String getTipoMaterial();
+    
+    public String getOverviewMaterial();
 }
