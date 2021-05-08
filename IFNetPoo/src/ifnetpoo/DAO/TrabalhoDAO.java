@@ -1,19 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.DAO;
 
 import ifnetpoo.Classes.Trabalho;
 import ifnetpoo.Classes.Usuario;
 import ifnetpoo.Classes.Disciplina;
+
 import java.util.ArrayList;
 
-/**
- *
- * @author gabri
- */
 public class TrabalhoDAO {
     private final ArrayList<Trabalho> gruposTrabalho = new ArrayList<>();
     
@@ -40,11 +32,7 @@ public class TrabalhoDAO {
     }
     
     public void removerGrupo(int index) {
-        int size = this.gruposTrabalho.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new Error("Grupo não encontrado");
-        }
+        this.getGrupoPorIndex(index);
         
         this.gruposTrabalho.remove(index);                
     }

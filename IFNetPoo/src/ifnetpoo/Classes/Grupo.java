@@ -1,20 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.Classes;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author gabriel
- */
 public abstract class Grupo {
-    private final String nome;    
-    private final ArrayList<Aluno> alunos = new ArrayList<>();
+    private final String nome;
     private final Usuario criador;
+    private final ArrayList<Aluno> alunos = new ArrayList<>();
 
     public Grupo(String nome, Usuario criador) {
         this.nome = nome;
@@ -44,14 +35,10 @@ public abstract class Grupo {
     }
 
     public int getQuantidadeAlunos() {
-        int cont = 0;
-        
-        for (Aluno aluno : this.alunos) {
-            cont = cont + 1;
-        }
-        
-        return cont;
+        return this.alunos.size();
     }
+    
+    public abstract String getTipoGrupo();
     
     public abstract String getGrupoOverview();
 }

@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.Classes;
 
-/**
- *
- * @author gabriel
- */
 public class Pesquisa extends Grupo {
     private final Usuario orientador;
 
@@ -23,7 +14,13 @@ public class Pesquisa extends Grupo {
     }
     
     @Override
+    public String getTipoGrupo() {
+        return "pesquisa";
+    }
+    
+    @Override
     public String getGrupoOverview() {
-        return "Tipo: Pesquisa; Nome: " + this.getNome() + "; Criador: " + this.getCriador().getNome() + "; Orientador: " + this.getOrientador().getNome();
+        return "Tipo: " + this.getTipoGrupo()+ "; Nome: " + this.getNome() + "; Criador: " + this.getCriador().getNome() + "; "
+            + "Orientador: " + this.getOrientador().getNome();
     }
 }
