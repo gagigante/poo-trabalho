@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.DAO;
 
 import ifnetpoo.Classes.Professor;
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
+
 import java.util.ArrayList;
 
-/**
- *
- * @author gabriel
- */
 public class ProfessorDAO {
     private final ArrayList<Professor> professores = new ArrayList<>();
     

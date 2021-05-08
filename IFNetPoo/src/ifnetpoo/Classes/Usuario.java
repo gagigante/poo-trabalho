@@ -1,20 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ifnetpoo.Classes;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author gabriel
- */
 public abstract class Usuario implements Comparable<Usuario>{
-    private String nome;
-    private String prontuario;
-    private String email;
+    private final String nome;
+    private final String prontuario;
+    private final String email;
     private final ArrayList<Disciplina> disciplinas = new ArrayList<>();
     
     public Usuario(String nome, String prontuario, String email) {
@@ -27,30 +18,23 @@ public abstract class Usuario implements Comparable<Usuario>{
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getProntuario() {
         return prontuario;
-    }
-
-    public void setProtuario(String prontuario) {
-        this.prontuario = prontuario;
     }
 
     public String getEmail() {
         return email;
     }
-
-    public void setEmail(String email) {
-        this.email = email;
+    
+    public ArrayList<Disciplina> getDisciplinas() {
+        return this.disciplinas;
     }
     
     public void cadastraDisciplina(Disciplina disciplina) {
         this.disciplinas.add(disciplina);
     }
     
+    @Override
     public int compareTo(Usuario usuario) {
         if (usuario.getProntuario().equals(this.getProntuario())) {
             return 1;
@@ -59,5 +43,5 @@ public abstract class Usuario implements Comparable<Usuario>{
         return 0;
     }
     
-     public abstract String tipoUsuario();
+    public abstract String tipoUsuario();
 }
