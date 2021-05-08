@@ -9,6 +9,6 @@ package ifnetpoo.DAO;
  *
  * @author gabri
  */
-public class CursoDAO {
+public class MaterialDAO {
     
 }

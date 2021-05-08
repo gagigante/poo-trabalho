@@ -30,13 +30,4 @@ public class Professor extends Usuario {
     public String tipoUsuario() {
         return "professor";
     }
-
-//    @Override
-//    public int compareTo(Professor professor) {
-//        if (professor.getProtuario().equals(this.getProtuario())) {
-//            return 1;
-//        }
-//        
-//        return 0;
-//    }
 }

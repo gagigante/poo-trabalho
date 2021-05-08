@@ -5,6 +5,8 @@
  */
 package ifnetpoo.Classes;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author gabriel
@@ -13,6 +15,7 @@ public abstract class Usuario implements Comparable<Usuario>{
     private String nome;
     private String prontuario;
     private String email;
+    private final ArrayList<Disciplina> disciplinas = new ArrayList<>();
     
     public Usuario(String nome, String prontuario, String email) {
         this.nome = nome;
@@ -42,6 +45,10 @@ public abstract class Usuario implements Comparable<Usuario>{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public void cadastraDisciplina(Disciplina disciplina) {
+        this.disciplinas.add(disciplina);
     }
     
     public int compareTo(Usuario usuario) {

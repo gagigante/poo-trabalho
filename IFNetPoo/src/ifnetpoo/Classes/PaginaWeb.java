@@ -47,4 +47,9 @@ public class PaginaWeb implements IMaterial {
     public String getOverviewMaterial() {
         return "Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; URL: " + this.getUrl()+ "; Criador: " + this.getCriador();
     }
+
+    @Override
+    public String getTipoMaterial() {
+        return "web";
+    }
 }

@@ -12,22 +12,12 @@ import java.util.ArrayList;
  * @author gabriel
  */
 public class Aluno extends Usuario {
-    private ArrayList<Curso> cursos;
-    private ArrayList<Disciplina> disciplinas;
+    private final ArrayList<Disciplina> disciplinas;
     
-    public Aluno(String nome, String prontuario, String email, ArrayList<Curso> cursos, ArrayList<Disciplina> disciplinas) {
+    public Aluno(String nome, String prontuario, String email, ArrayList<Disciplina> disciplinas) {
         super(nome, prontuario, email);
         
-        this.cursos = cursos;
         this.disciplinas = disciplinas;
-    }
-    
-    public ArrayList<Curso> getCursos() {
-        return this.cursos;
-    }
-    
-    public void setCursos(ArrayList<Curso> cursos) {
-        this.cursos = cursos;
     }
     
     public void cadastrarDisciplina(Disciplina disciplina) {

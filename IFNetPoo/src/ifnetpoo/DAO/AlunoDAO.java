@@ -6,9 +6,7 @@
 package ifnetpoo.DAO;
 
 import ifnetpoo.Classes.Aluno;
-import ifnetpoo.Classes.Curso;
 import ifnetpoo.Classes.Disciplina;
-import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
 import java.util.ArrayList;
 
 /**
@@ -16,14 +14,14 @@ import java.util.ArrayList;
  * @author gabriel
  */
 public class AlunoDAO {
-    private ArrayList<Aluno> alunos = new ArrayList<>();
+    private final ArrayList<Aluno> alunos = new ArrayList<>();
     
     public ArrayList<Aluno> getAlunos() {
         return this.alunos;
     }
     
-    public Aluno cadastrarAluno(String nome, String prontuario, String email, ArrayList<Curso> cursos, ArrayList<Disciplina> disciplinas) {
-        Aluno novoAluno = new Aluno(nome, prontuario, email, cursos, disciplinas); 
+    public Aluno cadastrarAluno(String nome, String prontuario, String email, ArrayList<Disciplina> disciplinas) {
+        Aluno novoAluno = new Aluno(nome, prontuario, email, disciplinas); 
         
         this.alunos.add(novoAluno);
         

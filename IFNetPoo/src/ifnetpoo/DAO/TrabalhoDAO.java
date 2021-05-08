@@ -52,11 +52,9 @@ public class TrabalhoDAO {
     public ArrayList<Trabalho> getGruposPorDisciplina(Disciplina disciplina) {
         ArrayList<Trabalho> gruposFiltrados = new ArrayList<>();
         
-        for (Trabalho grupo : this.gruposTrabalho) {
-            if (grupo.getDiciplina().compareTo(disciplina) == 1) {
-                gruposFiltrados.add(grupo);
-            }
-        };
+        this.gruposTrabalho.stream().filter(grupo -> (grupo.getDiciplina().compareTo(disciplina) == 1)).forEachOrdered(grupo -> {
+            gruposFiltrados.add(grupo);
+        });
         
         if (gruposFiltrados.isEmpty()) {
             throw new Error("Nenhum grupo dessa disciplina foi encontrado");

@@ -43,4 +43,14 @@ public class DisciplinaDAO {
 
         return novaDisciplina;
     }
+    
+    public void removerDisciplina(int index) {
+        int size = this.disciplinas.size();
+        
+        if (index < 0 || index > size - 1) {
+            throw new Error("Disciplina não encontrada");
+        }
+        
+        this.disciplinas.remove(index);                
+    }
 }

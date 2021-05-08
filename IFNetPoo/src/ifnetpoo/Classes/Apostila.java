@@ -49,5 +49,8 @@ public class Apostila implements IMaterial {
         return "Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Área: " + this.getArea() + "; Criador: " + this.getCriador();
     }
 
-
+    @Override
+    public String getTipoMaterial() {
+        return "apostila";
+    }
 }

@@ -68,5 +68,9 @@ public class Livro implements IMaterial {
         return "Título: " + this.getTitulo() + "; Categoria: " + this.getCategoria() + "; Autor: " + this.getAutor()+ "; Número de páginas: " 
             + this.getNumeroDePaginas() + "; Edição: " + this.getEdicao() + "; Criador: " + this.getCriador();
     }
- 
+
+    @Override
+    public String getTipoMaterial() {
+        return "livro";
+    }
 }

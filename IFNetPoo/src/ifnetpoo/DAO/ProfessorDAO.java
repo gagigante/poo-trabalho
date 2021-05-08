@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author gabriel
  */
 public class ProfessorDAO {
-    private ArrayList<Professor> professores = new ArrayList<>();
+    private final ArrayList<Professor> professores = new ArrayList<>();
     
     public ArrayList<Professor> getProfessores() {
         return this.professores;
@@ -22,7 +22,7 @@ public class ProfessorDAO {
     
     public Professor buscarProfessorPeloProntuario(String prontuario) {
         for (Professor professor : this.professores) {
-            if (professor.getProtuario().equals(prontuario)) {
+            if (professor.getProntuario().equals(prontuario)) {
                 return professor;
             }
         }
@@ -35,12 +35,22 @@ public class ProfessorDAO {
 
         this.professores.forEach(professor -> {
             if (professor.compareTo(novoProfessor) == 1) {
-                throw new ExcessaoDuplicacao("Já existe um usuário com esse prontuário", professor.getProtuario());
+                throw new ExcessaoDuplicacao("Já existe um usuário com esse prontuário", professor.getProntuario());
             };
         });
 
         this.professores.add(novoProfessor);
 
         return novoProfessor;
+    }
+    
+    public void removerProfessor(int index) {
+        int size = this.professores.size();
+        
+        if (index < 0 || index > size - 1) {
+            throw new Error("Professor não encontrado");
+        }
+        
+        this.professores.remove(index);                
     }
 }

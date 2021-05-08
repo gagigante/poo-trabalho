@@ -19,4 +19,6 @@ public interface IMaterial {
     public Usuario getCriador();
     
     public String getOverviewMaterial();
+    
+    public String getTipoMaterial();
 }
