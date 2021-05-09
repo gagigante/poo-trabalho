@@ -65,12 +65,14 @@ public class IFNetPoo {
         String email;
         String area;
         
+        String disciplinaSelecionada;
         String nomeDisciplina;
         String siglaDisciplina;
         
         String tipoGrupo;
         String nomeGrupo;
         
+        String materialSelecionado;
         String tipoMaterial;
         String nomeMaterial;
         String categoria;
@@ -78,8 +80,6 @@ public class IFNetPoo {
         int numeroDePaginas;
         int edicao;
         String url;
-        
-        String disciplinaSelecionada;
         int i;
         
         Disciplina disciplina;
@@ -912,10 +912,10 @@ public class IFNetPoo {
                         System.out.println("-----------------------------------\n");
                                   
                         System.out.println("Selecione o material que deseja excluir: ");
-                        grupoSelecinado = scanner.next();
+                        materialSelecionado = scanner.next();
                             
                         try {
-                            materialDAO.removerMaterial(Integer.parseInt(grupoSelecinado) - 1);
+                            materialDAO.removerMaterial(Integer.parseInt(materialSelecionado) - 1);
                         } catch (Error err) {
                             System.out.println(err.getMessage());
                         }
