@@ -1,7 +1,6 @@
 package ifnetpoo.DAO;
 
 import ifnetpoo.Classes.Aluno;
-import ifnetpoo.Classes.Disciplina;
 
 import java.util.ArrayList;
 

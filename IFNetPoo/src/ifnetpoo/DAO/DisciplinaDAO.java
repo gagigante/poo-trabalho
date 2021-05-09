@@ -28,7 +28,7 @@ public class DisciplinaDAO {
         this.disciplinas.forEach(disciplina -> {
             if (disciplina.compareTo(novaDisciplina) == 1) {
                 throw new ExcessaoDuplicacao("Já existe uma disciplina com essa sigla", disciplina.getSigla());
-            };
+            }
         });
 
         this.disciplinas.add(novaDisciplina);
