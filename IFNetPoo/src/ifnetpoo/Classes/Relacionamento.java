@@ -45,6 +45,4 @@ public class Relacionamento {
     public void setAmigosEmComum(int amigosEmComum) {
         this.amigosEmComum = amigosEmComum;
     }
-    
-    
 }

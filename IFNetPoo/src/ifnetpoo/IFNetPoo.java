@@ -6,6 +6,7 @@ import ifnetpoo.Classes.Professor;
 import ifnetpoo.Classes.Disciplina;
 import ifnetpoo.Classes.Grupo;
 import ifnetpoo.Classes.Livro;
+import ifnetpoo.Classes.MySQLConnection;
 import ifnetpoo.Classes.PaginaWeb;
 import ifnetpoo.Classes.Usuario;
 
@@ -26,6 +27,8 @@ import java.util.Scanner;
 public class IFNetPoo {
 
     public static void main(String[] args) {
+        MySQLConnection conn = new MySQLConnection();
+        
         Scanner scanner = new Scanner(System.in);
         
         ProfessorDAO professorDAO = new ProfessorDAO();
