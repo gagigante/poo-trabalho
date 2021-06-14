@@ -1,0 +1,92 @@
+create table usuarios (
+	id int not null AUTO_INCREMENT,
+	nome varchar(255) not null,
+	prontuario varchar(255) not null unique,
+	email varchar(255) not null,
+	area varchar(255),
+	tipo Enum('aluno', 'professor') not null,
+	primary key (id)
+);
+
+create table disciplinas (
+	id int not null AUTO_INCREMENT,
+	nome varchar(255) not null,
+	sigla char(20) not null unique,
+	semestre int not null,
+	primary key (id)
+);
+
+create table grupos (
+	id int not null AUTO_INCREMENT,
+	titulo varchar(255) not null,
+	orientador_id int not null,
+	disciplina_id int not null,
+	primary key (id),
+	FOREIGN KEY (orientador_id) REFERENCES usuarios(id)
+ 		ON DELETE CASCADE
+	 	ON UPDATE CASCADE,
+	FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+);
+
+create table alunos_grupos (
+	id int not null AUTO_INCREMENT,
+	aluno_id int not null,
+	grupo_id int not null,
+	disciplina_id int not null,
+	primary key (id),
+	FOREIGN KEY (aluno_id) REFERENCES usuarios(id)
+		ON DELETE CASCADE
+	 	ON UPDATE CASCADE,
+	FOREIGN KEY (grupo_id) REFERENCES grupos(id)
+		ON DELETE CASCADE
+	 	ON UPDATE CASCADE
+);
+
+create table usuarios_disciplinas (
+	id int not null AUTO_INCREMENT,
+	usuario_id int not null,
+	disciplina_id int not null,
+	primary key (id),
+	FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+		ON DELETE CASCADE
+	 	ON UPDATE CASCADE,
+	FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id)
+		ON DELETE CASCADE
+	 	ON UPDATE CASCADE
+);
+
+create table materiais (
+	id int not null AUTO_INCREMENT,
+	titulo varchar(255) not null,
+	categoria varchar(255) not null,
+	url varchar(255),
+	area varchar(255),
+	autor varchar(255),
+	edicao int,
+	numero_de_paginas int,
+	criador_id int not null,
+	disciplina_id int not null,	
+	primary key (id),
+	FOREIGN KEY (criador_id) REFERENCES usuarios(id)
+		ON DELETE CASCADE
+	 	ON UPDATE CASCADE,
+	FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id)
+		ON DELETE CASCADE
+	 	ON UPDATE CASCADE
+);
+
+create table relacionamentos (
+	id int not null AUTO_INCREMENT,
+	usuario_1_id int not null,
+	usuario_2_id int not null,
+	data_inicio_amizade TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	primary key (id),
+	FOREIGN KEY (usuario_1_id) REFERENCES usuarios(id)
+		ON DELETE CASCADE
+	 	ON UPDATE CASCADE,
+	FOREIGN KEY (usuario_2_id) REFERENCES usuarios(id)
+		ON DELETE CASCADE
+	 	ON UPDATE CASCADE
+);
