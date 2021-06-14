@@ -1,7 +1,7 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.Classes.Pesquisa;
-import ifnetpoo.Classes.Usuario;
+import ifnetpoo.Models.Pesquisa;
+import ifnetpoo.Models.Usuario;
 
 import java.util.ArrayList;
 

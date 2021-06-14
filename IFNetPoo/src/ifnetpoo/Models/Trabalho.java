@@ -1,4 +1,4 @@
-package ifnetpoo.Classes;
+package ifnetpoo.Models;
 
 public class Trabalho extends Grupo {
     private Disciplina diciplina;

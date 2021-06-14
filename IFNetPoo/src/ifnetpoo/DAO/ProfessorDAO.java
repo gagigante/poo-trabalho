@@ -1,6 +1,6 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.Classes.Professor;
+import ifnetpoo.Models.Professor;
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
 
 import java.util.ArrayList;

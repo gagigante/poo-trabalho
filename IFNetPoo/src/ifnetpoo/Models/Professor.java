@@ -1,4 +1,4 @@
-package ifnetpoo.Classes;
+package ifnetpoo.Models;
 
 public class Professor extends Usuario {
     private final String area;

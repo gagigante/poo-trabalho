@@ -1,7 +1,7 @@
 package ifnetpoo.Interfaces;
 
-import ifnetpoo.Classes.Disciplina;
-import ifnetpoo.Classes.Usuario;
+import ifnetpoo.Models.Disciplina;
+import ifnetpoo.Models.Usuario;
 
 public interface IMaterial {
     public String getTitulo();

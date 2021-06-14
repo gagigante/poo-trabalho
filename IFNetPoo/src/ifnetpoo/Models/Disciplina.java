@@ -1,4 +1,4 @@
-package ifnetpoo.Classes;
+package ifnetpoo.Models;
 
 public class Disciplina implements Comparable<Disciplina> {
     private final String nome;

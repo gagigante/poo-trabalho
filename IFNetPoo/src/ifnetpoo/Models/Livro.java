@@ -1,4 +1,4 @@
-package ifnetpoo.Classes;
+package ifnetpoo.Models;
 
 import ifnetpoo.Interfaces.IMaterial;
 

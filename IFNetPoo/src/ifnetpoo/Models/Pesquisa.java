@@ -1,4 +1,4 @@
-package ifnetpoo.Classes;
+package ifnetpoo.Models;
 
 public class Pesquisa extends Grupo {
     private final Usuario orientador;

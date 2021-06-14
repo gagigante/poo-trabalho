@@ -1,6 +1,6 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.Classes.Disciplina;
+import ifnetpoo.Models.Disciplina;
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
 
 import java.util.ArrayList;

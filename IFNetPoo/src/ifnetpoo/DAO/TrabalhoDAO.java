@@ -1,8 +1,8 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.Classes.Trabalho;
-import ifnetpoo.Classes.Usuario;
-import ifnetpoo.Classes.Disciplina;
+import ifnetpoo.Models.Trabalho;
+import ifnetpoo.Models.Usuario;
+import ifnetpoo.Models.Disciplina;
 
 import java.util.ArrayList;
 

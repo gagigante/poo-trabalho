@@ -1,14 +1,14 @@
 package ifnetpoo;
 
-import ifnetpoo.Classes.Aluno;
-import ifnetpoo.Classes.Apostila;
-import ifnetpoo.Classes.Professor;
-import ifnetpoo.Classes.Disciplina;
-import ifnetpoo.Classes.Grupo;
-import ifnetpoo.Classes.Livro;
-import ifnetpoo.Classes.MySQLConnection;
-import ifnetpoo.Classes.PaginaWeb;
-import ifnetpoo.Classes.Usuario;
+import ifnetpoo.Models.Aluno;
+import ifnetpoo.Models.Apostila;
+import ifnetpoo.Models.Professor;
+import ifnetpoo.Models.Disciplina;
+import ifnetpoo.Models.Grupo;
+import ifnetpoo.Models.Livro;
+import ifnetpoo.Database.MySQLConnection;
+import ifnetpoo.Models.PaginaWeb;
+import ifnetpoo.Models.Usuario;
 
 import ifnetpoo.Interfaces.IMaterial;
 
@@ -35,7 +35,7 @@ public class IFNetPoo {
         DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
         TrabalhoDAO trabalhoDAO = new TrabalhoDAO();
         PesquisaDAO pesquisaDAO = new PesquisaDAO();
-        AlunoDAO alunoDAO = new AlunoDAO();
+        AlunoDAO alunoDAO = new AlunoDAO(new MySQLConnection());
         MaterialDAO materialDAO = new MaterialDAO();
 
         // temp

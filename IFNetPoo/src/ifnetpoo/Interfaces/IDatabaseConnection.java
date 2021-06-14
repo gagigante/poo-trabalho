@@ -5,10 +5,14 @@
  */
 package ifnetpoo.Interfaces;
 
+import java.sql.Connection;
+
 /**
  *
  * @author gabri
  */
 public interface IDatabaseConnection {
-     
+    public Connection getConn();
+    
+    public void setConn(Connection conn);
 }

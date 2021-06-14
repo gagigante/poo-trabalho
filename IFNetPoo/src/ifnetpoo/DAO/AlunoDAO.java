@@ -1,11 +1,18 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.Classes.Aluno;
+import ifnetpoo.Database.MySQLConnection;
+import ifnetpoo.Interfaces.IDatabaseConnection;
+import ifnetpoo.Models.Aluno;
 
 import java.util.ArrayList;
 
 public class AlunoDAO {
     private final ArrayList<Aluno> alunos = new ArrayList<>();
+    private IDatabaseConnection conn;
+
+    public AlunoDAO(IDatabaseConnection conn) {
+        this.conn = conn;
+    }
     
     public ArrayList<Aluno> getAlunos() {
         return this.alunos;

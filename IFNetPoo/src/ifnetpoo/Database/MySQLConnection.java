@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ifnetpoo.Classes;
+package ifnetpoo.Database;
 
+import ifnetpoo.Interfaces.IDatabaseConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
  *
  * @author gabri
  */
-public class MySQLConnection {
+public class MySQLConnection implements IDatabaseConnection {
     Connection conn = null;
 	
     public MySQLConnection() {
@@ -25,10 +26,12 @@ public class MySQLConnection {
         }
     }
 		
+    @Override
     public Connection getConn() {
         return conn;
     }
 
+    @Override
     public void setConn(Connection conn) {
         this.conn = conn;
     }
