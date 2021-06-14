@@ -18,7 +18,7 @@ public class MySQLConnection {
 	
     public MySQLConnection() {
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pinatalk", "gagigante", "290501");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd_ifnet", "gagigante", "290501");
         } catch (SQLException e) {
             // TODO Bloco catch gerado automaticamente
             e.printStackTrace();
