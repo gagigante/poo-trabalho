@@ -1,11 +1,19 @@
 package ifnetpoo.DAO;
 
+import ifnetpoo.Interfaces.IDatabaseConnection;
 import ifnetpoo.Interfaces.IMaterial;
 import java.util.ArrayList;
 
 public class MaterialDAO {
+    private IDatabaseConnection conn;
+
+    // PROVISORIO
     private final ArrayList<IMaterial> materiais = new ArrayList<>();
-    
+
+    public MaterialDAO(IDatabaseConnection conn) {
+        this.conn = conn;
+    }
+
     public ArrayList<IMaterial> getMateriais() {
         return this.materiais;
     }

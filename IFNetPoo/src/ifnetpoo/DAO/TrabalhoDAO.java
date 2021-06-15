@@ -1,5 +1,6 @@
 package ifnetpoo.DAO;
 
+import ifnetpoo.Interfaces.IDatabaseConnection;
 import ifnetpoo.Models.Trabalho;
 import ifnetpoo.Models.Usuario;
 import ifnetpoo.Models.Disciplina;
@@ -7,7 +8,14 @@ import ifnetpoo.Models.Disciplina;
 import java.util.ArrayList;
 
 public class TrabalhoDAO {
+    private IDatabaseConnection conn;
+    
+    // PROVISORIO
     private final ArrayList<Trabalho> gruposTrabalho = new ArrayList<>();
+    
+    public TrabalhoDAO(IDatabaseConnection conn) {
+        this.conn = conn;
+    }
     
     public ArrayList<Trabalho> getGrupos() {
         return this.gruposTrabalho;

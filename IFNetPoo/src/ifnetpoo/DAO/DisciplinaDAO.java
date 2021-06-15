@@ -2,12 +2,20 @@ package ifnetpoo.DAO;
 
 import ifnetpoo.Models.Disciplina;
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
+import ifnetpoo.Interfaces.IDatabaseConnection;
 
 import java.util.ArrayList;
 
 public class DisciplinaDAO {
+    private IDatabaseConnection conn;
+    
+    // PROVISORIO
     private final ArrayList<Disciplina> disciplinas = new ArrayList<>();
     
+    public DisciplinaDAO(IDatabaseConnection conn) {
+        this.conn = conn;
+    }
+     
     public ArrayList<Disciplina> getDisciplinas() {
         return this.disciplinas;
     }

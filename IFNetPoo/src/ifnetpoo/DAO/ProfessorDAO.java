@@ -2,12 +2,20 @@ package ifnetpoo.DAO;
 
 import ifnetpoo.Models.Professor;
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
+import ifnetpoo.Interfaces.IDatabaseConnection;
 
 import java.util.ArrayList;
 
 public class ProfessorDAO {
+    private IDatabaseConnection conn;
+    
+    // PROVISORIO
     private final ArrayList<Professor> professores = new ArrayList<>();
     
+    public ProfessorDAO(IDatabaseConnection conn) {
+        this.conn = conn;
+    }
+     
     public ArrayList<Professor> getProfessores() {
         return this.professores;
     }

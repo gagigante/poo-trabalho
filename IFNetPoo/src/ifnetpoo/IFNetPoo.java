@@ -27,16 +27,14 @@ import java.util.Scanner;
 public class IFNetPoo {
 
     public static void main(String[] args) {
-        MySQLConnection conn = new MySQLConnection();
-        
         Scanner scanner = new Scanner(System.in);
         
-        ProfessorDAO professorDAO = new ProfessorDAO();
-        DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
-        TrabalhoDAO trabalhoDAO = new TrabalhoDAO();
-        PesquisaDAO pesquisaDAO = new PesquisaDAO();
+        ProfessorDAO professorDAO = new ProfessorDAO(new MySQLConnection());
+        DisciplinaDAO disciplinaDAO = new DisciplinaDAO(new MySQLConnection());
+        TrabalhoDAO trabalhoDAO = new TrabalhoDAO(new MySQLConnection());
+        PesquisaDAO pesquisaDAO = new PesquisaDAO(new MySQLConnection());
         AlunoDAO alunoDAO = new AlunoDAO(new MySQLConnection());
-        MaterialDAO materialDAO = new MaterialDAO();
+        MaterialDAO materialDAO = new MaterialDAO(new MySQLConnection());
 
         // temp
         Usuario usuarioLogado = null;

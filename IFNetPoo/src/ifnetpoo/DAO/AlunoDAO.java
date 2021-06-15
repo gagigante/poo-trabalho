@@ -1,20 +1,26 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.Database.MySQLConnection;
 import ifnetpoo.Interfaces.IDatabaseConnection;
 import ifnetpoo.Models.Aluno;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class AlunoDAO {
-    private final ArrayList<Aluno> alunos = new ArrayList<>();
     private IDatabaseConnection conn;
+    
+    // PROVISORIO
+    private final ArrayList<Aluno> alunos = new ArrayList<>();
 
     public AlunoDAO(IDatabaseConnection conn) {
         this.conn = conn;
     }
     
-    public ArrayList<Aluno> getAlunos() {
+    public ArrayList<Aluno> getAlunos() {             
         return this.alunos;
     }
     
