@@ -1,5 +1,7 @@
 package ifnetpoo.DAO;
 
+import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
+import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
 import ifnetpoo.Interfaces.IDatabaseConnection;
 import ifnetpoo.Models.Aluno;
 
@@ -12,43 +14,101 @@ import java.util.ArrayList;
 
 public class AlunoDAO {
     private IDatabaseConnection conn;
-    
-    // PROVISORIO
-    private final ArrayList<Aluno> alunos = new ArrayList<>();
 
     public AlunoDAO(IDatabaseConnection conn) {
         this.conn = conn;
     }
     
-    public ArrayList<Aluno> getAlunos() {             
-        return this.alunos;
+    public ArrayList<Aluno> getAlunos() throws SQLException {
+        PreparedStatement stmt;
+        ResultSet rs=null;
+        ArrayList<Aluno> alunos = new ArrayList<>();
+        
+        try {
+            stmt = this.conn.getConn().prepareStatement("select * from usuarios where tipo = 'aluno'");
+            rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                var aluno = new Aluno(rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"));
+                alunos.add(aluno);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return alunos;
     }
     
-    public Aluno buscarAlunoPeloProntuario(String prontuario) {
-        for (Aluno aluno : this.alunos) {
+    public Aluno buscarAlunoPeloProntuario(String prontuario) throws SQLException {
+        ArrayList<Aluno> alunos = new ArrayList<>();
+        
+        alunos = this.getAlunos();
+        
+        for (Aluno aluno : alunos) {
             if (aluno.getProntuario().equals(prontuario)) {
                 return aluno;
             }
         }
         
-        throw new Error("Aluno não foi encontrado");
+        throw new ExcessaoItemNaoEncontrado("Aluno não foi encontrado");
+    }
+    
+    public boolean isProntuarioDisponivel(String prontuario) {
+        PreparedStatement stmt;
+        ResultSet rs=null;
+        
+         try {
+            stmt = this.conn.getConn().prepareStatement("select * from usuarios where prontuario = ?");
+            stmt.setString(1, prontuario);
+            rs = stmt.executeQuery();
+            
+            if (!rs.next()) {
+                return false;
+            }
+            
+            return true;
+        } catch (SQLException e) {}
+         
+        return false;
     }
     
     public Aluno cadastrarAluno(String nome, String prontuario, String email) {
-        Aluno novoAluno = new Aluno(nome, prontuario, email); 
+        if (this.isProntuarioDisponivel(prontuario)) {
+            throw new ExcessaoDuplicacao("Já existe um usuário com esse prontuário", prontuario);
+        }
         
-        this.alunos.add(novoAluno);
+        PreparedStatement stmt;
+        
+        try {
+            stmt = this.conn.getConn().prepareStatement("insert into usuarios (nome, prontuario, email, tipo) values(?, ?, ?, 'aluno')");
+            stmt.setString(1, nome);
+            stmt.setString(2, prontuario);
+            stmt.setString(3, email);
+            stmt.execute();
+        } catch (SQLException e) {}
+        
+        var novoAluno = new Aluno(nome, prontuario, email);
         
         return novoAluno;
     }
     
-    public void removerAluno(int index) {
-        int size = this.alunos.size();
+    public void removerAlunoPorIndex(int index) throws SQLException {
+        var alunos = new ArrayList<Aluno>();
+        PreparedStatement stmt;
+        
+        alunos = this.getAlunos();
+        int size = alunos.size();
         
         if (index < 0 || index > size - 1) {
-            throw new Error("Aluno não encontrado");
+            throw new ExcessaoItemNaoEncontrado("Aluno não foi encontrado");
         }
         
-        this.alunos.remove(index);                
+        var alunoSelecionado = alunos.get(index);
+        
+        try {
+            stmt = this.conn.getConn().prepareStatement("delete from usuarios where prontuario = ?");
+            stmt.setString(1, alunoSelecionado.getProntuario());
+            stmt.execute();
+        } catch (SQLException e) {}
     }
 }
