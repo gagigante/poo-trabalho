@@ -5,8 +5,6 @@ import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
 import ifnetpoo.Interfaces.IDatabaseConnection;
 import ifnetpoo.Models.Aluno;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +20,7 @@ public class AlunoDAO {
     public ArrayList<Aluno> getAlunos() throws SQLException {
         PreparedStatement stmt;
         ResultSet rs=null;
-        ArrayList<Aluno> alunos = new ArrayList<>();
+        var alunos = new ArrayList<Aluno>();
         
         try {
             stmt = this.conn.getConn().prepareStatement("select * from usuarios where tipo = 'aluno'");
@@ -32,25 +30,31 @@ public class AlunoDAO {
                 var aluno = new Aluno(rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"));
                 alunos.add(aluno);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) {}
         
         return alunos;
     }
     
     public Aluno buscarAlunoPeloProntuario(String prontuario) throws SQLException {
-        ArrayList<Aluno> alunos = new ArrayList<>();
+        PreparedStatement stmt;
+        ResultSet rs=null;
         
-        alunos = this.getAlunos();
-        
-        for (Aluno aluno : alunos) {
-            if (aluno.getProntuario().equals(prontuario)) {
-                return aluno;
+        try {
+            stmt = this.conn.getConn().prepareStatement("select * from usuarios where prontuario = ? and tipo = 'aluno'");
+            stmt.setString(1, prontuario);
+            rs = stmt.executeQuery();
+            
+            if (!rs.next()) {
+                throw new ExcessaoItemNaoEncontrado("Aluno não foi encontrado");
             }
+            
+            var aluno = new Aluno(rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"));
+            return aluno;
+        } catch (SQLException e) {
+            System.out.println(e);
         }
-        
-        throw new ExcessaoItemNaoEncontrado("Aluno não foi encontrado");
+         
+        return null;
     }
     
     public boolean isProntuarioDisponivel(String prontuario) {

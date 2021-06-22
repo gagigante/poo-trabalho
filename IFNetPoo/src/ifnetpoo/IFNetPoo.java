@@ -20,28 +20,32 @@ import ifnetpoo.DAO.TrabalhoDAO;
 import ifnetpoo.DAO.MaterialDAO;
 
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class IFNetPoo {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Scanner scanner = new Scanner(System.in);
+        
+        AlunoDAO alunoDAO = new AlunoDAO(new MySQLConnection());
         
         ProfessorDAO professorDAO = new ProfessorDAO(new MySQLConnection());
         DisciplinaDAO disciplinaDAO = new DisciplinaDAO(new MySQLConnection());
         TrabalhoDAO trabalhoDAO = new TrabalhoDAO(new MySQLConnection());
         PesquisaDAO pesquisaDAO = new PesquisaDAO(new MySQLConnection());
-        AlunoDAO alunoDAO = new AlunoDAO(new MySQLConnection());
+        
         MaterialDAO materialDAO = new MaterialDAO(new MySQLConnection());
 
         // temp
         Usuario usuarioLogado = null;
         
-        final ArrayList<Grupo> grupos = new ArrayList<>();
-        final ArrayList<Professor> professores = new ArrayList<>();
         final ArrayList<Aluno> alunos = new ArrayList<>();
+        final ArrayList<Professor> professores = new ArrayList<>();
+        
+        final ArrayList<Grupo> grupos = new ArrayList<>();
         final ArrayList<Disciplina> disciplinas = new ArrayList<>();
         final ArrayList<IMaterial> materiais = new ArrayList<>();
         
@@ -94,9 +98,9 @@ public class IFNetPoo {
             System.out.println("8 - Excluir aluno");
             
             System.out.println();
-            System.out.println("9 - Cadastrar disciplina no sistema");
-            System.out.println("10 - Excluir disciplina");
-            System.out.println("11 - Listar disciplinas cadastradas");
+            System.out.println("9 - Cadastrar disciplina");
+            System.out.println("10 - Exibir lista de disciplinas cadastradas");
+            System.out.println("11 - Excluir disciplina");
             System.out.println("12 - Matricular-se em disciplina");
             System.out.println("13 - Ministrar disciplina");            
             
@@ -152,6 +156,8 @@ public class IFNetPoo {
                             System.out.println("\n" + err.getMessage() + "\n");
                         }
                     }
+                    
+                    break;
                 case "2":
                     // LOGOUT
                     if (usuarioLogado != null) {
@@ -160,6 +166,8 @@ public class IFNetPoo {
                     } else {
                         System.out.println("\nNão há nenhum usuário logado\n");
                     }
+                    
+                    break;
                 case "3": 
                     // CADASTRO PROFESSOR
                     System.out.println("Digite o nome:");
@@ -180,23 +188,40 @@ public class IFNetPoo {
                     } catch (ExcessaoDuplicacao err) {
                         System.out.println("\n" + err.getMessage() + "! Valor duplicado: " + err.getValorDuplicado() + "\n");
                     }
+                    
+                    break;
                 case "4":
                     // LISTAR PROFESSORES
-                    if (professorDAO.getProfessores().isEmpty()) {
+                    professores.clear();
+                    professores.addAll(professorDAO.getProfessores());
+                    
+                   if (professores.isEmpty()) {
                         System.out.println("\nNenhum professor cadastrado\n");
                         break;
                     }
                     
                     System.out.println("\n");
-                    professorDAO.getProfessores().forEach(professor -> {
+                    professores.forEach(professor -> {
                         System.out.println("-----------------------------------");
                         System.out.println("Nome: " + professor.getNome());
                         System.out.println("Prontuário: " + professor.getProntuario());
                         System.out.println("E-mail: " + professor.getEmail());
                         System.out.println("Área: " + professor.getArea());
+                        
+                        var disciplinasProfessor = disciplinaDAO.getDisciplinasUsuario(professor.getProntuario());
+                        
+                        if (!disciplinasProfessor.isEmpty()) {
+                            System.out.println("Disciplinas Ministradas: ");
+                            
+                            for (var d: disciplinasProfessor) {
+                                System.out.println("- " + d.getNome());
+                            }  
+                        }
                     });
                     
                     System.out.println("-----------------------------------\n");
+                    
+                    break;
                 case "5":
                     // EXCLUIR PROFESSOR
                     professores.clear();
@@ -220,11 +245,13 @@ public class IFNetPoo {
                         professorSelecionado = scanner.next();
 
                         try {
-                            professorDAO.removerProfessor(Integer.parseInt(professorSelecionado) - 1);
+                            professorDAO.removerProfessorPorIndex(Integer.parseInt(professorSelecionado) - 1);
                         } catch (Error err) {
                             System.out.println(err.getMessage());
                         }
                     }
+                    
+                    break;
                 case "6":
                     // CADASTRAR ALUNO
                     System.out.println("Digite o nome: ");
@@ -235,39 +262,50 @@ public class IFNetPoo {
                     
                     System.out.println("Digite o e-mail: ");
                     email = scanner.next();
-                                           
-                    alunoDAO.cadastrarAluno(nome, prontuario, email);
-                
+                                         
+                    try {
+                        alunoDAO.cadastrarAluno(nome, prontuario, email);
+                    } catch (ExcessaoDuplicacao err) {
+                        System.out.println(err.getMessage());
+                    }
+                    
+                    break;
                 case "7":
                     // LISTA DE ALUNOS
-                    if (alunoDAO.getAlunos().isEmpty()) {
+                    alunos.clear();
+                    alunos.addAll(alunoDAO.getAlunos());
+                    
+                    if (alunos.isEmpty()) {
                         System.out.println("\nNenhum aluno cadastrado\n");
                         break;
                     }
                    
                     System.out.println("\n");
-                    alunoDAO.getAlunos().forEach(aluno -> {
+                    alunos.forEach(aluno -> {
                         System.out.println("-----------------------------------");
                         System.out.println("Nome: " + aluno.getNome());
                         System.out.println("Prontuário: " + aluno.getProntuario());
                         System.out.println("E-mail: " + aluno.getEmail());
-                        System.out.println("Disciplinas: ");
                         
-                        if (!aluno.getDisciplinas().isEmpty()) {
-                            for (Disciplina dic : aluno.getDisciplinas()) {
-                                System.out.println("- " + dic.getNome());
-                            }                    
+                        var disciplinasAluno = disciplinaDAO.getDisciplinasUsuario(aluno.getProntuario());
+                        
+                        if (!disciplinasAluno.isEmpty()) {
+                            System.out.println("Disciplinas Matriculadas: ");
+                            
+                            for (var d: disciplinasAluno) {
+                                System.out.println("- " + d.getNome());
+                            }  
                         }
                     });
                     
                     System.out.println("-----------------------------------\n");
-                
+                    break;
                 case "8":
                     // EXCLUIR ALUNOS                
                     alunos.clear();
                     alunos.addAll(alunoDAO.getAlunos());
                   
-                    if (professores.isEmpty()) {
+                    if (alunos.isEmpty()) {
                         System.out.println("\nNenhum aluno cadastrado\n");
                     } else {
                         i = 1;
@@ -282,15 +320,16 @@ public class IFNetPoo {
 
 
                         System.out.println("Selecione o aluno que deseja excluir: ");
-                        professorSelecionado = scanner.next();
+                        String alunoSelecionado = scanner.next();
 
                         try {
-                            alunoDAO.removerAluno(Integer.parseInt(professorSelecionado) - 1);
+                            alunoDAO.removerAlunoPorIndex(Integer.parseInt(alunoSelecionado) - 1);
                         } catch (Error err) {
                             System.out.println(err.getMessage());
                         }
                     }
-                
+                    
+                    break;
                 case "9":
                     // CADASTRAR DISCIPLINA
                     System.out.println("Digite o nome da disciplina: ");
@@ -304,8 +343,26 @@ public class IFNetPoo {
                     } catch (ExcessaoDuplicacao err) {
                         System.out.println(err.getMessage());
                     }
-                
+                    
+                    break;
                 case "10":
+                    // LISTAR DISCIPLINAS
+                    disciplinas.clear();
+                    disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                    
+                    if (disciplinas.isEmpty()) {
+                        System.out.println("Nenhuma disciplina cadastrada");
+                        break;
+                    }
+                    
+                    System.out.println("\n-----------------------------------");
+                    for (Disciplina d : disciplinas) {
+                        System.out.println("Sigla: " + d.getSigla() + "; Nome: " + d.getNome());
+                        System.out.println("-----------------------------------");
+                    }
+                    
+                    break;
+                case "11":
                     // EXCLUIR DISCIPLINA
                     disciplinas.clear();
                     disciplinas.addAll(disciplinaDAO.getDisciplinas());
@@ -327,28 +384,13 @@ public class IFNetPoo {
                         disciplinaSelecionada = scanner.next();
 
                         try {
-                            disciplinaDAO.removerDisciplina(Integer.parseInt(disciplinaSelecionada) - 1);
+                            disciplinaDAO.removerDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
                         } catch (Error err) {
                             System.out.println(err.getMessage());
                         }
                     }
-                
-                case "11":
-                    // LISTAR DISCIPLINAS
-                    disciplinas.clear();
-                    disciplinas.addAll(disciplinaDAO.getDisciplinas());
                     
-                    if (disciplinas.isEmpty()) {
-                        System.out.println("Nenhuma disciplina cadastrada");
-                        break;
-                    }
-                    
-                    System.out.println("\n-----------------------------------");
-                    for (Disciplina d : disciplinas) {
-                        System.out.println("Sigla: " + d.getSigla() + "; Nome: " + d.getNome());
-                        System.out.println("-----------------------------------");
-                    }
-                
+                    break;
                 case "12":
                     // MATRICULAR-SE EM DISCIPLINA
                     if (usuarioLogado == null) {
@@ -388,7 +430,8 @@ public class IFNetPoo {
                     } catch (Error err) {
                         System.out.println(err.getMessage());
                     }
-                
+                    
+                    break;
                 case "13":
                     // MINISTRAR DISCIPLINA
                     if (usuarioLogado == null) {
@@ -428,7 +471,8 @@ public class IFNetPoo {
                     } catch (Error err) {
                         System.out.println(err.getMessage());
                     }
-                
+                    
+                    break;
                 case "14":
                     // CRIAR GRUPOS
                     if (usuarioLogado == null) {
@@ -496,7 +540,8 @@ public class IFNetPoo {
                             }
                         }
                     }
-                
+                    
+                    break;
                 case "15":
                     // EXCLUIR GRUPO
                     tipoGrupo = null;
@@ -572,7 +617,8 @@ public class IFNetPoo {
                             }
                         }
                     }
-                
+                    
+                    break;
                 case "16":
                     // LISTAR GRUPOS
                     grupos.clear();
@@ -590,7 +636,8 @@ public class IFNetPoo {
                         
                         System.out.println("-----------------------------------\n");
                     }
-                
+                    
+                    break;
                 case "17":
                     // Mostrar grupo mais popular
                     Grupo grupoMaisPopular = null;
@@ -620,7 +667,8 @@ public class IFNetPoo {
                     }
                     
                     System.out.println(grupoMaisPopular.getGrupoOverview());
-                
+                    break;
+                    
                 case "18":
                     // CONSULTAR GRUPOS DE TRABALHO POR DISCIPLINA
                     i = 1;
@@ -652,7 +700,8 @@ public class IFNetPoo {
                     } catch (Error err) {
                         System.out.println(err.getMessage());
                     }
-                
+                    
+                    break;
                 case "19":
                     // CADASTRAR ALUNO EM GRUPO
                     if (usuarioLogado == null) {
@@ -721,7 +770,8 @@ public class IFNetPoo {
                             }
                         }
                     }
-                
+                    
+                    break;
                 case "20":
                     // CADASTRO DE MATERIAL
                     if (usuarioLogado == null) {
@@ -876,7 +926,8 @@ public class IFNetPoo {
                             }
                         }
                     }
-                
+                    
+                    break;
                 case "21":
                    // EXCLUIR MATERIAL
                    materiais.clear();
@@ -904,7 +955,8 @@ public class IFNetPoo {
                             System.out.println(err.getMessage());
                         }
                     }
-                
+                    
+                    break;
                 case "22":
                     // LISTAR MATERIAIS
                     materiais.clear();
@@ -920,6 +972,8 @@ public class IFNetPoo {
                         System.out.println(m.getOverviewMaterial());
                     }
                     System.out.println("-----------------------------------\n");
+                    
+                    break;
                 case "0":
                     break menu;
                 default: 
