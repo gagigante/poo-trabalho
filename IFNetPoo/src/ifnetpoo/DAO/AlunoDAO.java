@@ -48,7 +48,7 @@ public class AlunoDAO {
                 throw new ExcessaoItemNaoEncontrado("Aluno não foi encontrado");
             }
             
-            var aluno = new Aluno(rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"));
+            var aluno = new Aluno(rs.getInt("id"), rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"));
             return aluno;
         } catch (SQLException e) {
             System.out.println(e);
