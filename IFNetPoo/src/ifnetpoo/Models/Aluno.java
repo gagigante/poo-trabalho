@@ -5,6 +5,10 @@ public class Aluno extends Usuario {
         super(nome, prontuario, email);
     }
     
+    public Aluno(int id, String nome, String prontuario, String email) {
+        super(id, nome, prontuario, email);
+    }
+    
     @Override
     public String tipoUsuario() {
         return "aluno";
