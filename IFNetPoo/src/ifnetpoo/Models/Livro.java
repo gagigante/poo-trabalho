@@ -3,6 +3,7 @@ package ifnetpoo.Models;
 import ifnetpoo.Interfaces.IMaterial;
 
 public class Livro implements IMaterial {
+    private final int id;
     private final String titulo;
     private final String categoria;
     private final Usuario criador;
@@ -20,6 +21,7 @@ public class Livro implements IMaterial {
         int numeroDePaginas,
         int edicao
     ) {
+        this.id = 0; // DEVERIA INICIAR COMO NULL
         this.titulo = titulo;
         this.categoria = categoria;
         this.criador = criador;
@@ -27,6 +29,31 @@ public class Livro implements IMaterial {
         this.autor = autor;
         this.numeroDePaginas = numeroDePaginas;
         this.edicao = edicao;
+    }
+    
+     public Livro(
+        int id,
+        String titulo, 
+        String categoria, 
+        Usuario criador,
+        Disciplina disciplina,
+        String autor, 
+        int numeroDePaginas,
+        int edicao
+    ) {
+        this.id = id;
+        this.titulo = titulo;
+        this.categoria = categoria;
+        this.criador = criador;
+        this.disciplina = disciplina;
+        this.autor = autor;
+        this.numeroDePaginas = numeroDePaginas;
+        this.edicao = edicao;
+    }
+    
+    @Override
+    public int getId() {
+        return this.id;
     }
     
     @Override

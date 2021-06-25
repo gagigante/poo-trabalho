@@ -2,7 +2,8 @@ package ifnetpoo.Models;
 
 import ifnetpoo.Interfaces.IMaterial;
 
-public class Apostila implements IMaterial {    
+public class Apostila implements IMaterial {
+    private final int id;
     private final String titulo;
     private final String categoria;
     private final Usuario criador;
@@ -10,11 +11,26 @@ public class Apostila implements IMaterial {
     private final String area;
     
     public Apostila(String titulo, String categoria, Usuario criador, String area, Disciplina disciplina) {
+        this.id = 0; // DEVERIA INICIAR COMO NULL
         this.titulo = titulo;
         this.categoria = categoria;
         this.criador = criador; 
         this.disciplina = disciplina;
         this.area = area;
+    }
+    
+    public Apostila(int id, String titulo, String categoria, Usuario criador, String area, Disciplina disciplina) {
+        this.id = id;
+        this.titulo = titulo;
+        this.categoria = categoria;
+        this.criador = criador; 
+        this.disciplina = disciplina;
+        this.area = area;
+    }
+    
+    @Override
+    public int getId() {
+        return this.id;
     }
     
     @Override
