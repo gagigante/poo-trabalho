@@ -795,6 +795,33 @@ public class IFNetPoo {
                         }
                     } while (!"1".equals(tipoMaterial) && !"2".equals(tipoMaterial) && !"3".equals(tipoMaterial));
                     
+                    disciplinas.clear();
+                    disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                  
+                    if (disciplinas.isEmpty()) {
+                        System.out.println("\nNenhuma disciplina cadastrada\n");
+                    } else {
+                        i = 1;
+
+                        System.out.println("\n\n");
+                        for (Disciplina d : disciplinas) {
+                            System.out.println("-----------------------------------");
+                            System.out.println(i + " - " + d.getNome());
+                            i++;
+                        }                        
+                        System.out.println("-----------------------------------\n");
+                            
+                        System.out.println("Selecione a disciplina: ");
+                        disciplinaSelecionada = scanner.next();                                                        
+                            
+                        try {
+                            disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
+                        } catch (ExcessaoItemNaoEncontrado err){
+                            System.out.println(err.getMessage());
+                            break;
+                        }
+                    }
+                    
                     // LIVRO
                     if ("1".equals(tipoMaterial)) {
                         System.out.println("Informe o nome do livro: ");
@@ -812,35 +839,11 @@ public class IFNetPoo {
                         System.out.println("Informe a edição: ");
                         edicao = Integer.parseInt(scanner.next());
                         
-                        disciplinas.clear();
-                        disciplinas.addAll(disciplinaDAO.getDisciplinas());
-                  
-                        if (disciplinas.isEmpty()) {
-                            System.out.println("\nNenhuma disciplina cadastrada\n");
-                        } else {
-                            i = 1;
-
-                            System.out.println("\n\n");
-                            for (Disciplina d : disciplinas) {
-                                System.out.println("-----------------------------------");
-                                System.out.println(i + " - " + d.getNome());
-                                i++;
-                            }                        
-                            System.out.println("-----------------------------------\n");
-                            
-                            System.out.println("Selecione a disciplina: ");
-                            disciplinaSelecionada = scanner.next();                                                        
-                            
-                            try {
-                                disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
-                                
-                                Livro livro = new Livro(nomeMaterial, categoria, usuarioLogado, disciplina, autor, numeroDePaginas, edicao);
-                                
-                                materialDAO.adicionarMaterial(livro);
-                            } catch (Error err) {
-                                System.out.println(err.getMessage());
-                            }
-                        }                        
+                        try {
+                            materialDAO.adicionarMaterial(nomeMaterial, categoria, autor, edicao, numeroDePaginas, usuarioLogado.getId(), disciplina.getId());
+                        } catch (Error err) {
+                            System.out.println(err.getMessage());
+                        }
                     }
                     
                     // APOSTILA
@@ -854,34 +857,10 @@ public class IFNetPoo {
                         System.out.println("Informe a área da apostila: ");
                         area = scanner.next();
                         
-                        disciplinas.clear();
-                        disciplinas.addAll(disciplinaDAO.getDisciplinas());
-                  
-                        if (disciplinas.isEmpty()) {
-                            System.out.println("\nNenhuma disciplina cadastrada\n");
-                        } else {
-                            i = 1;
-
-                            System.out.println("\n\n");
-                            for (Disciplina d : disciplinas) {
-                                System.out.println("-----------------------------------");
-                                System.out.println(i + " - " + d.getNome());
-                                i++;
-                            }                        
-                            System.out.println("-----------------------------------\n");
-                            
-                            System.out.println("Selecione a disciplina: ");
-                            disciplinaSelecionada = scanner.next();                                                        
-                            
-                            try {
-                                disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
-                                
-                                Apostila apostila = new Apostila(nomeMaterial, categoria, usuarioLogado, area, disciplina);
-                                
-                                materialDAO.adicionarMaterial(apostila);
-                            } catch (Error err) {
-                                System.out.println(err.getMessage());
-                            }
+                        try {
+                            materialDAO.adicionarMaterial(nomeMaterial, categoria, usuarioLogado.getId(), area, disciplina.getId());
+                        } catch (Error err) {
+                            System.out.println(err.getMessage());
                         }
                     }
                     
@@ -899,31 +878,10 @@ public class IFNetPoo {
                         disciplinas.clear();
                         disciplinas.addAll(disciplinaDAO.getDisciplinas());
                   
-                        if (disciplinas.isEmpty()) {
-                            System.out.println("\nNenhuma disciplina cadastrada\n");
-                        } else {
-                            i = 1;
-
-                            System.out.println("\n\n");
-                            for (Disciplina d : disciplinas) {
-                                System.out.println("-----------------------------------");
-                                System.out.println(i + " - " + d.getNome());
-                                i++;
-                            }                        
-                            System.out.println("-----------------------------------\n");
-                            
-                            System.out.println("Selecione a disciplina: ");
-                            disciplinaSelecionada = scanner.next();                                                        
-                            
-                            try {
-                                disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
-                                
-                                PaginaWeb web = new PaginaWeb(nomeMaterial, categoria, usuarioLogado, url, disciplina);
-                                
-                                materialDAO.adicionarMaterial(web);
-                            } catch (Error err) {
-                                System.out.println(err.getMessage());
-                            }
+                        try {
+                            materialDAO.adicionarMaterial(nomeMaterial, categoria, url, usuarioLogado.getId(), disciplina.getId());
+                        } catch (Error err) {
+                            System.out.println(err.getMessage());
                         }
                     }
                     
