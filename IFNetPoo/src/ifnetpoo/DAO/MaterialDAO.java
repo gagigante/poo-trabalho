@@ -19,9 +19,6 @@ import java.util.ArrayList;
 public class MaterialDAO {
     private IDatabaseConnection conn;
 
-    // PROVISORIO
-    private final ArrayList<IMaterial> materiais = new ArrayList<>();
-
     public MaterialDAO(IDatabaseConnection conn) {
         this.conn = conn;
     }
@@ -67,7 +64,7 @@ public class MaterialDAO {
         return materiais;
     }
     
-    // APOSTILA
+    // ADICIONA APOSTILA
     public void adicionarMaterial(String titulo, String categoria, int idCriador, String area, int idDisciplina) {
         PreparedStatement stmt;
         
@@ -83,7 +80,7 @@ public class MaterialDAO {
         } catch (SQLException e) {}
     }
     
-    // WEB
+    // ADICIONA WEB
     public void adicionarMaterial(String titulo, String categoria, String url, int idCriador, int idDisciplina) {
         PreparedStatement stmt;
         
@@ -99,7 +96,7 @@ public class MaterialDAO {
         } catch (SQLException e) {}
     }
     
-    // LIVRO
+    // ADICIONA LIVRO
     public void adicionarMaterial(String titulo, String categoria, String autor, int edicao, int numeroDePaginas, int idCriador, int idDisciplina) {
         PreparedStatement stmt;
         

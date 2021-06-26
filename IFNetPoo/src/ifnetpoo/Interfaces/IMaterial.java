@@ -4,6 +4,8 @@ import ifnetpoo.Models.Disciplina;
 import ifnetpoo.Models.Usuario;
 
 public interface IMaterial {
+    public int getId();
+    
     public String getTitulo();
     
     public String getCategoria();
