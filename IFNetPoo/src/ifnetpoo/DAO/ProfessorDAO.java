@@ -48,7 +48,7 @@ public class ProfessorDAO {
                 throw new ExcessaoItemNaoEncontrado("Professor não foi encontrado");
             }
             
-            var professor = new Professor(rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"), rs.getString("area"));
+            var professor = new Professor(rs.getInt("id"), rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"), rs.getString("area"));
             return professor;
         } catch (SQLException e) {
              System.out.println(e);

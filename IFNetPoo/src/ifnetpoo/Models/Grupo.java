@@ -2,14 +2,27 @@ package ifnetpoo.Models;
 
 import java.util.ArrayList;
 
-public abstract class Grupo {
+public abstract class Grupo implements Comparable<Grupo>{
+    private final int id;
     private final String nome;
     private final Usuario criador;
     private final ArrayList<Aluno> alunos = new ArrayList<>();
+    private int quantidadeAlunos = 0;
 
     public Grupo(String nome, Usuario criador) {
+        this.id = 0;
         this.nome = nome;
         this.criador = criador;
+    }
+    
+    public Grupo(int id, String nome, Usuario criador) {
+        this.id = id;
+        this.nome = nome;
+        this.criador = criador;
+    }
+    
+    public int getId() {
+        return this.id;
     }
 
     public String getNome() {
@@ -35,10 +48,19 @@ public abstract class Grupo {
     }
 
     public int getQuantidadeAlunos() {
-        return this.alunos.size();
+        return this.quantidadeAlunos;
+    }
+    
+    public void setQuantidadeAlunos(int quantidade) {
+        this.quantidadeAlunos = quantidade;
     }
     
     public abstract String getTipoGrupo();
     
     public abstract String getGrupoOverview();
+
+    @Override
+    public int compareTo(Grupo grupo) {
+        return this.quantidadeAlunos >= grupo.getQuantidadeAlunos() ? 1 : 0;
+    }
 }

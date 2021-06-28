@@ -8,6 +8,12 @@ public class Trabalho extends Grupo {
         
         this.diciplina = diciplina;
     }
+    
+    public Trabalho(int id, Disciplina diciplina, String nome, Usuario criador) {
+        super(id, nome, criador);
+        
+        this.diciplina = diciplina;
+    }
 
     public Disciplina getDiciplina() {
         return diciplina;

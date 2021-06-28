@@ -13,9 +13,6 @@ import java.util.ArrayList;
 public class DisciplinaDAO {
     private IDatabaseConnection conn;
     
-    // PROVISORIO
-    private final ArrayList<Disciplina> disciplinas = new ArrayList<>();
-    
     public DisciplinaDAO(IDatabaseConnection conn) {
         this.conn = conn;
     }
@@ -30,7 +27,7 @@ public class DisciplinaDAO {
             rs = stmt.executeQuery();
             
             while (rs.next()) {
-                var disciplina = new Disciplina(rs.getString("nome"), rs.getString("sigla"));
+                var disciplina = new Disciplina(rs.getInt("id"), rs.getString("nome"), rs.getString("sigla"));
                 disciplinas.add(disciplina);
             }
         } catch (SQLException e) {}
@@ -39,13 +36,14 @@ public class DisciplinaDAO {
     }
     
     public Disciplina getDisciplinaPorIndex(int index) {
-        int size = this.disciplinas.size();
+        var disciplinas = this.getDisciplinas();
+        int size = disciplinas.size();
         
         if (index < 0 || index > size - 1) {
-            throw new Error("Disciplina não encontrada");
+            throw new ExcessaoItemNaoEncontrado("Disciplina não encontrada");
         }
         
-        return this.disciplinas.get(index);
+        return disciplinas.get(index);
     }
     
     public boolean isSiglaDisponivel(String sigla) {
@@ -120,11 +118,69 @@ public class DisciplinaDAO {
             rs = stmt.executeQuery();
             
             while (rs.next()) {
-                var disciplina = new Disciplina(rs.getString("nome"), rs.getString("sigla"));
+                var disciplina = new Disciplina(rs.getInt("id"), rs.getString("nome"), rs.getString("sigla"));
                 disciplinas.add(disciplina);
             }
         } catch (SQLException e) {}
         
         return disciplinas;
+    }
+    
+    public boolean isUsuarioAssociadoComDisciplina(int idDisciplina, int idUsuario) {
+        PreparedStatement stmt;
+        ResultSet rs=null;
+        
+        try {
+            stmt = this.conn.getConn().prepareStatement("select * from usuarios_disciplinas where disciplina_id = ? and usuario_id = ?;");
+            stmt.setInt(1, idDisciplina);
+            stmt.setInt(2, idUsuario);
+            rs = stmt.executeQuery();
+            
+            if (!rs.next()) {
+                return false;
+            }
+            
+            return true;
+        } catch (SQLException e) {}
+         
+        return false;
+    }
+    
+    public void associaDiciplinaUsuario(String siglaDisciplina, String prontuario) {
+        PreparedStatement stmt;
+        ResultSet rs=null;
+        int idUsuario = 0;
+        int idDisciplina = 0;
+        
+        try {
+            stmt = this.conn.getConn().prepareStatement("select * from usuarios where prontuario = ?");
+            stmt.setString(1, prontuario);
+            rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                idUsuario = rs.getInt("id");
+            }
+        } catch (SQLException e) {}
+        
+        try {
+            stmt = this.conn.getConn().prepareStatement("select * from disciplinas where sigla = ?");
+            stmt.setString(1, siglaDisciplina);
+            rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                idDisciplina = rs.getInt("id");
+            }
+        } catch (SQLException e) {}
+        
+        if (this.isUsuarioAssociadoComDisciplina(idDisciplina, idUsuario)){
+            throw new Error("Usuário já associado com essa disciplina");
+        }
+        
+        try {
+            stmt = this.conn.getConn().prepareStatement("insert into usuarios_disciplinas (disciplina_id, usuario_id) values(?, ?);");
+            stmt.setInt(1, idDisciplina);
+            stmt.setInt(2, idUsuario);
+            stmt.execute();
+        } catch (SQLException e) {}
     }
 }

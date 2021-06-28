@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MaterialDAO {
-    private IDatabaseConnection conn;
+    private final IDatabaseConnection conn;
 
     public MaterialDAO(IDatabaseConnection conn) {
         this.conn = conn;

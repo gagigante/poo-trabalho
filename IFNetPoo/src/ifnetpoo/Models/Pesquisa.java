@@ -8,6 +8,12 @@ public class Pesquisa extends Grupo {
         
         this.orientador = orientador;
     }
+    
+    public Pesquisa(int id, Usuario orientador, String nome) {
+        super(id, nome, orientador);
+        
+        this.orientador = orientador;
+    }
 
     public Usuario getOrientador() {
         return orientador;
