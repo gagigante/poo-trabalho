@@ -121,7 +121,9 @@ public class DisciplinaDAO {
                 var disciplina = new Disciplina(rs.getInt("id"), rs.getString("nome"), rs.getString("sigla"));
                 disciplinas.add(disciplina);
             }
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
         
         return disciplinas;
     }

@@ -52,9 +52,7 @@ public class ProfessorDAO {
             
             var professor = new Professor(rs.getInt("id"), rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"), rs.getString("area"));
             return professor;
-        } catch (SQLException e) {
-             System.out.println(e);
-        }
+        } catch (SQLException e) {}
          
         return null;
     }

@@ -1,6 +1,7 @@
 package ifnetpoo;
 
 import ifnetpoo.Controllers.AlunoController;
+import ifnetpoo.Controllers.AutenticacaoController;
 import ifnetpoo.Controllers.ProfessorController;
 import ifnetpoo.Models.Aluno;
 import ifnetpoo.Models.Professor;
@@ -31,6 +32,7 @@ public class IFNetPoo {
     public static void main(String[] args) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         
+        AutenticacaoController autenticacaoController = new AutenticacaoController();
         ProfessorController professorController = new ProfessorController();
         AlunoController alunoController = new AlunoController();
         
@@ -53,29 +55,24 @@ public class IFNetPoo {
         
         int professorSelecionado;
         int alunoSelecionado;
-        
-        
-        final ArrayList<Grupo> grupos = new ArrayList<>();
-        final ArrayList<Disciplina> disciplinas = new ArrayList<>();
-        final ArrayList<IMaterial> materiais = new ArrayList<>();
-        
-        
-        String grupoSelecinado;
-        
-        
+      
         String nome;
         String prontuario;
         String email;
         String area;
         
-        String disciplinaSelecionada;
-        int disciplinaIndex;
         String nomeDisciplina;
         String siglaDisciplina;
         
+        final ArrayList<Grupo> grupos = new ArrayList<>();
+        final ArrayList<Disciplina> disciplinas = new ArrayList<>();
+        final ArrayList<IMaterial> materiais = new ArrayList<>();
+        
+        String grupoSelecinado;
+        String disciplinaSelecionada;
+        
         String tipoGrupo;
         String nomeGrupo;
-        
         String materialSelecionado;
         String tipoMaterial;
         String nomeMaterial;
@@ -84,8 +81,6 @@ public class IFNetPoo {
         int numeroDePaginas;
         int edicao;
         String url;
-        
-        
         Disciplina disciplina = null;
   
         menu: while (true) {
@@ -154,16 +149,16 @@ public class IFNetPoo {
                     
                     if ("1".equals(tipoUsuario)) {
                         try {
-                            usuarioLogado = alunoDAO.buscarAlunoPeloProntuario(prontuario);
-                        } catch (Error err) {
+                            usuarioLogado = autenticacaoController.show(prontuario, "aluno");
+                        } catch (ExcessaoItemNaoEncontrado err) {
                             System.out.println("\n" + err.getMessage() + "\n");
                         }
                     }
                     
                     if ("2".equals(tipoUsuario)) {
                         try {
-                            usuarioLogado = professorDAO.buscarProfessorPeloProntuario(prontuario);
-                        } catch (Error err) {
+                            usuarioLogado = autenticacaoController.show(prontuario, "professor");
+                        } catch (ExcessaoItemNaoEncontrado err) {
                             System.out.println("\n" + err.getMessage() + "\n");
                         }
                     }
@@ -312,7 +307,7 @@ public class IFNetPoo {
                 case "8":
                     // EXCLUIR ALUNOS                
                     alunos.clear();
-                    alunos.addAll(alunoDAO.getAlunos());
+                    alunos.addAll(alunoController.index());
                   
                     if (alunos.isEmpty()) {
                         System.out.println("\nNenhum aluno cadastrado\n");

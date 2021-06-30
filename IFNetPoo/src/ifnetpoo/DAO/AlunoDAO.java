@@ -38,7 +38,7 @@ public class AlunoDAO {
         return alunos;
     }
     
-    public Aluno buscarAlunoPeloProntuario(String prontuario) throws SQLException {
+    public Aluno buscarAlunoPeloProntuario(String prontuario) {
         PreparedStatement stmt;
         ResultSet rs=null;
         
@@ -53,9 +53,7 @@ public class AlunoDAO {
             
             var aluno = new Aluno(rs.getInt("id"), rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"));
             return aluno;
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+        } catch (SQLException e) {}
          
         return null;
     }
