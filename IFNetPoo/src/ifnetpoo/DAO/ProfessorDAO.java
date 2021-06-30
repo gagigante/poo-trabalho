@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ProfessorDAO {
-    private IDatabaseConnection conn;
+    private final IDatabaseConnection conn;
     
     public ProfessorDAO(IDatabaseConnection conn) {
         this.conn = conn;
@@ -27,7 +27,7 @@ public class ProfessorDAO {
             rs = stmt.executeQuery();
             
             while (rs.next()) {
-                var professor = new Professor(rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"), rs.getString("area"));
+                var professor = new Professor(rs.getInt("id"), rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"), rs.getString("area"));
                 professores.add(professor);
             }
         } catch (SQLException e) {}
@@ -57,7 +57,7 @@ public class ProfessorDAO {
         return null;
     }
     
-    public boolean isProntuarioDisponivel(String prontuario) {
+    private boolean isProntuarioDisponivel(String prontuario) {
         PreparedStatement stmt;
         ResultSet rs=null;
         
@@ -97,23 +97,13 @@ public class ProfessorDAO {
         return novoProfessor;
     }
     
-    public void removerProfessorPorIndex(int index) {
-        var professores = new ArrayList<Professor>();
+    public void removerProfessor(int id) {
         PreparedStatement stmt;
         
-        professores = this.getProfessores();
-        int size = professores.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new ExcessaoItemNaoEncontrado("Professor não foi encontrado");
-        }
-        
-        var professorSelecionado = professores.get(index);
-        
         try {
-            stmt = this.conn.getConn().prepareStatement("delete from usuarios where prontuario = ?");
-            stmt.setString(1, professorSelecionado.getProntuario());
+            stmt = this.conn.getConn().prepareStatement("delete from usuarios where id = ?");
+            stmt.setInt(1, id);
             stmt.execute();
-        } catch (SQLException e) {}               
+        } catch (SQLException e) {}   
     }
 }

@@ -1,13 +1,11 @@
 package ifnetpoo;
 
+import ifnetpoo.Controllers.ProfessorController;
 import ifnetpoo.Models.Aluno;
-import ifnetpoo.Models.Apostila;
 import ifnetpoo.Models.Professor;
 import ifnetpoo.Models.Disciplina;
 import ifnetpoo.Models.Grupo;
-import ifnetpoo.Models.Livro;
 import ifnetpoo.Database.MySQLConnection;
-import ifnetpoo.Models.PaginaWeb;
 import ifnetpoo.Models.Usuario;
 
 import ifnetpoo.Interfaces.IMaterial;
@@ -21,8 +19,8 @@ import ifnetpoo.DAO.MaterialDAO;
 
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
 import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
-import java.sql.SQLException;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -32,8 +30,9 @@ public class IFNetPoo {
     public static void main(String[] args) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         
-        AlunoDAO alunoDAO = new AlunoDAO(new MySQLConnection());
+        ProfessorController professorController = new ProfessorController();
         
+        AlunoDAO alunoDAO = new AlunoDAO(new MySQLConnection());
         ProfessorDAO professorDAO = new ProfessorDAO(new MySQLConnection());
         DisciplinaDAO disciplinaDAO = new DisciplinaDAO(new MySQLConnection());
         TrabalhoDAO trabalhoDAO = new TrabalhoDAO(new MySQLConnection());
@@ -44,9 +43,10 @@ public class IFNetPoo {
         // temp
         Usuario usuarioLogado = null;
         
-        final ArrayList<Aluno> alunos = new ArrayList<>();
-        final ArrayList<Professor> professores = new ArrayList<>();
+        final ArrayList<Professor> professores = new ArrayList<>();        
         
+        
+        final ArrayList<Aluno> alunos = new ArrayList<>();
         final ArrayList<Grupo> grupos = new ArrayList<>();
         final ArrayList<Disciplina> disciplinas = new ArrayList<>();
         final ArrayList<IMaterial> materiais = new ArrayList<>();
@@ -196,7 +196,7 @@ public class IFNetPoo {
                 case "4":
                     // LISTAR PROFESSORES
                     professores.clear();
-                    professores.addAll(professorDAO.getProfessores());
+                    professores.addAll(professorController.index());
                     
                    if (professores.isEmpty()) {
                         System.out.println("\nNenhum professor cadastrado\n");
@@ -424,18 +424,12 @@ public class IFNetPoo {
                     System.out.println("-----------------------------------\n");
 
                     System.out.println("Selecione a disciplina que deseja se matricular: ");
-                    disciplinaIndex = Integer.parseInt(scanner.next());
-                    
-                    if (disciplinaIndex < 0 || disciplinaIndex > disciplinas.size() - 1) {
-                        System.out.println("\nDisciplina não foi encontrada");
-                    }
-                    
+                    disciplinaSelecionada = scanner.next();
+                                       
                     try {
-                        disciplinaDAO.associaDiciplinaUsuario(disciplinas.get(disciplinaIndex).getSigla(), usuarioLogado.getProntuario());
+                        disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
                         
-//                        disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
-                        
-//                        usuarioLogado.cadastraDisciplina(disciplina);
+                        disciplinaDAO.associaDiciplinaUsuario(disciplina.getSigla(), usuarioLogado.getProntuario());
                     } catch (Error err) {
                         System.out.println(err.getMessage());
                     }
@@ -476,7 +470,7 @@ public class IFNetPoo {
                     try {
                         disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
                         
-                        usuarioLogado.cadastraDisciplina(disciplina);
+                        disciplinaDAO.associaDiciplinaUsuario(disciplina.getSigla(), usuarioLogado.getProntuario());
                     } catch (Error err) {
                         System.out.println(err.getMessage());
                     }
