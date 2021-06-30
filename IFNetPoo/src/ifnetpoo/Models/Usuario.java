@@ -7,7 +7,7 @@ public abstract class Usuario implements Comparable<Usuario> {
     private final String nome;
     private final String prontuario;
     private final String email;
-    private final ArrayList<Disciplina> disciplinas = new ArrayList<>();
+    private ArrayList<Disciplina> disciplinas = new ArrayList<>();
     
     public Usuario(String nome, String prontuario, String email) {
         this.id = 0;
@@ -43,8 +43,8 @@ public abstract class Usuario implements Comparable<Usuario> {
         return this.disciplinas;
     }
     
-    public void cadastraDisciplina(Disciplina disciplina) {
-        this.disciplinas.add(disciplina);
+    public void setDisciplinas(ArrayList<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
     }
     
     @Override

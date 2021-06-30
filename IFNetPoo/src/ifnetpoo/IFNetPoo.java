@@ -1,5 +1,6 @@
 package ifnetpoo;
 
+import ifnetpoo.Controllers.AlunoController;
 import ifnetpoo.Controllers.ProfessorController;
 import ifnetpoo.Models.Aluno;
 import ifnetpoo.Models.Professor;
@@ -31,6 +32,7 @@ public class IFNetPoo {
         Scanner scanner = new Scanner(System.in);
         
         ProfessorController professorController = new ProfessorController();
+        AlunoController alunoController = new AlunoController();
         
         AlunoDAO alunoDAO = new AlunoDAO(new MySQLConnection());
         ProfessorDAO professorDAO = new ProfessorDAO(new MySQLConnection());
@@ -41,19 +43,25 @@ public class IFNetPoo {
         MaterialDAO materialDAO = new MaterialDAO(new MySQLConnection());
 
         // temp
+        int i;
+        String opcaoSelecionada;
+        
         Usuario usuarioLogado = null;
         
-        final ArrayList<Professor> professores = new ArrayList<>();        
-        
-        
+        final ArrayList<Professor> professores = new ArrayList<>();
         final ArrayList<Aluno> alunos = new ArrayList<>();
+        
+        int professorSelecionado;
+        int alunoSelecionado;
+        
+        
         final ArrayList<Grupo> grupos = new ArrayList<>();
         final ArrayList<Disciplina> disciplinas = new ArrayList<>();
         final ArrayList<IMaterial> materiais = new ArrayList<>();
         
-        String opcaoSelecionada;
+        
         String grupoSelecinado;
-        String professorSelecionado;
+        
         
         String nome;
         String prontuario;
@@ -76,7 +84,7 @@ public class IFNetPoo {
         int numeroDePaginas;
         int edicao;
         String url;
-        int i;
+        
         
         Disciplina disciplina = null;
   
@@ -186,7 +194,8 @@ public class IFNetPoo {
                     area = scanner.next();
                     
                     try {
-                        professorDAO.cadastraProfessor(nome, prontuario, email, area);
+                        professorController.store(nome, prontuario, email, area);
+                        
                         System.out.println("\nRegistro cadastrado com sucesso!\n");
                     } catch (ExcessaoDuplicacao err) {
                         System.out.println("\n" + err.getMessage() + "! Valor duplicado: " + err.getValorDuplicado() + "\n");
@@ -211,14 +220,12 @@ public class IFNetPoo {
                         System.out.println("E-mail: " + professor.getEmail());
                         System.out.println("Área: " + professor.getArea());
                         
-                        var disciplinasProfessor = disciplinaDAO.getDisciplinasUsuario(professor.getProntuario());
-                        
-                        if (!disciplinasProfessor.isEmpty()) {
+                        if (!professor.getDisciplinas().isEmpty()) {
                             System.out.println("Disciplinas Ministradas: ");
                             
-                            for (var d: disciplinasProfessor) {
-                                System.out.println("- " + d.getNome());
-                            }  
+                            professor.getDisciplinas().forEach(d -> {
+                                System.out.println(" - " + d.getNome());
+                            });
                         }
                     });
                     
@@ -228,30 +235,30 @@ public class IFNetPoo {
                 case "5":
                     // EXCLUIR PROFESSOR
                     professores.clear();
-                    professores.addAll(professorDAO.getProfessores());
+                    professores.addAll(professorController.index());
                   
                     if (professores.isEmpty()) {
                         System.out.println("\nNenhum professor cadastrado\n");
-                    } else {
-                        i = 1;
+                        break;
+                    } 
+                    
+                    i = 1;
 
-                        System.out.println("\n\n");
-                        for (Professor professor : professores) {
-                            System.out.println("-----------------------------------");
-                            System.out.println(i + " - " + professor.getProntuario() + " - " + professor.getNome());
-                            i++;
-                        }                        
-                        System.out.println("-----------------------------------\n");
+                    System.out.println("\n\n");
+                    for (Professor professor : professores) {
+                        System.out.println("-----------------------------------");
+                        System.out.println(i + " - " + professor.getProntuario() + " - " + professor.getNome());
+                        i++;
+                    }                        
+                    System.out.println("-----------------------------------\n");
 
+                    System.out.println("Selecione o professor que deseja excluir: ");
+                    professorSelecionado = Integer.parseInt(scanner.next()) - 1;
 
-                        System.out.println("Selecione o professor que deseja excluir: ");
-                        professorSelecionado = scanner.next();
-
-                        try {
-                            professorDAO.removerProfessorPorIndex(Integer.parseInt(professorSelecionado) - 1);
-                        } catch (Error err) {
-                            System.out.println(err.getMessage());
-                        }
+                    try {
+                        professorController.destroy(professorSelecionado);
+                    } catch (ExcessaoItemNaoEncontrado err) {
+                        System.out.println("\n" + err.getMessage() + "\n");
                     }
                     
                     break;
@@ -267,22 +274,22 @@ public class IFNetPoo {
                     email = scanner.next();
                                          
                     try {
-                        alunoDAO.cadastrarAluno(nome, prontuario, email);
+                        alunoController.store(nome, prontuario, email);
                     } catch (ExcessaoDuplicacao err) {
-                        System.out.println(err.getMessage());
+                        System.out.println("\n" + err.getMessage() + "\n");
                     }
                     
                     break;
                 case "7":
                     // LISTA DE ALUNOS
                     alunos.clear();
-                    alunos.addAll(alunoDAO.getAlunos());
+                    alunos.addAll(alunoController.index());
                     
                     if (alunos.isEmpty()) {
                         System.out.println("\nNenhum aluno cadastrado\n");
                         break;
                     }
-                   
+                    
                     System.out.println("\n");
                     alunos.forEach(aluno -> {
                         System.out.println("-----------------------------------");
@@ -290,18 +297,17 @@ public class IFNetPoo {
                         System.out.println("Prontuário: " + aluno.getProntuario());
                         System.out.println("E-mail: " + aluno.getEmail());
                         
-                        var disciplinasAluno = disciplinaDAO.getDisciplinasUsuario(aluno.getProntuario());
-                        
-                        if (!disciplinasAluno.isEmpty()) {
+                        if (!aluno.getDisciplinas().isEmpty()) {
                             System.out.println("Disciplinas Matriculadas: ");
                             
-                            for (var d: disciplinasAluno) {
-                                System.out.println("- " + d.getNome());
-                            }  
+                            aluno.getDisciplinas().forEach(d -> {
+                                System.out.println(" - " + d.getNome());
+                            });
                         }
                     });
                     
                     System.out.println("-----------------------------------\n");
+                    
                     break;
                 case "8":
                     // EXCLUIR ALUNOS                
@@ -310,26 +316,26 @@ public class IFNetPoo {
                   
                     if (alunos.isEmpty()) {
                         System.out.println("\nNenhum aluno cadastrado\n");
-                    } else {
-                        i = 1;
+                        break;
+                    } 
+                    
+                    i = 1;
 
-                        System.out.println("\n\n");
-                        for (Aluno aluno : alunos) {
-                            System.out.println("-----------------------------------");
-                            System.out.println(i + " - " + aluno.getProntuario() + " - " + aluno.getNome());
-                            i++;
-                        }                        
-                        System.out.println("-----------------------------------\n");
+                    System.out.println("\n\n");
+                    for (Aluno aluno : alunos) {
+                        System.out.println("-----------------------------------");
+                        System.out.println(i + " - " + aluno.getProntuario() + " - " + aluno.getNome());
+                        i++;
+                    }                        
+                    System.out.println("-----------------------------------\n");
 
+                    System.out.println("Selecione o aluno que deseja excluir: ");
+                    alunoSelecionado = Integer.parseInt(scanner.next()) - 1;
 
-                        System.out.println("Selecione o aluno que deseja excluir: ");
-                        String alunoSelecionado = scanner.next();
-
-                        try {
-                            alunoDAO.removerAlunoPorIndex(Integer.parseInt(alunoSelecionado) - 1);
-                        } catch (Error err) {
-                            System.out.println(err.getMessage());
-                        }
+                    try {
+                        alunoController.destroy(alunoSelecionado);
+                    } catch (ExcessaoItemNaoEncontrado err) {
+                        System.out.println("\n" + err.getMessage() + "\n");
                     }
                     
                     break;

@@ -1,9 +1,11 @@
 package ifnetpoo.DAO;
 
 import ifnetpoo.Models.Professor;
+
+import ifnetpoo.Interfaces.IDatabaseConnection;
+
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
 import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
-import ifnetpoo.Interfaces.IDatabaseConnection;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

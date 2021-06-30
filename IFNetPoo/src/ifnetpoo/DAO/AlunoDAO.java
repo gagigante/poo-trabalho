@@ -1,9 +1,12 @@
 package ifnetpoo.DAO;
 
+
+import ifnetpoo.Models.Aluno;
+
+import ifnetpoo.Interfaces.IDatabaseConnection;
+
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
 import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
-import ifnetpoo.Interfaces.IDatabaseConnection;
-import ifnetpoo.Models.Aluno;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +20,7 @@ public class AlunoDAO {
         this.conn = conn;
     }
     
-    public ArrayList<Aluno> getAlunos() throws SQLException {
+    public ArrayList<Aluno> getAlunos() {
         PreparedStatement stmt;
         ResultSet rs=null;
         var alunos = new ArrayList<Aluno>();
@@ -27,7 +30,7 @@ public class AlunoDAO {
             rs = stmt.executeQuery();
             
             while (rs.next()) {
-                var aluno = new Aluno(rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"));
+                var aluno = new Aluno(rs.getInt("id") ,rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"));
                 alunos.add(aluno);
             }
         } catch (SQLException e) {}
@@ -96,23 +99,13 @@ public class AlunoDAO {
         return novoAluno;
     }
     
-    public void removerAlunoPorIndex(int index) throws SQLException {
-        var alunos = new ArrayList<Aluno>();
+    public void removerAluno(int id) {
         PreparedStatement stmt;
         
-        alunos = this.getAlunos();
-        int size = alunos.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new ExcessaoItemNaoEncontrado("Aluno não foi encontrado");
-        }
-        
-        var alunoSelecionado = alunos.get(index);
-        
         try {
-            stmt = this.conn.getConn().prepareStatement("delete from usuarios where prontuario = ?");
-            stmt.setString(1, alunoSelecionado.getProntuario());
+            stmt = this.conn.getConn().prepareStatement("delete from usuarios where id = ?");
+            stmt.setInt(1, id);
             stmt.execute();
-        } catch (SQLException e) {}
+        } catch (SQLException e) {}   
     }
 }
