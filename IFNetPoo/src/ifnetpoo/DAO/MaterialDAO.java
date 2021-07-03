@@ -1,8 +1,5 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
-import ifnetpoo.Interfaces.IDatabaseConnection;
-import ifnetpoo.Interfaces.IMaterial;
 import ifnetpoo.Models.Aluno;
 import ifnetpoo.Models.Apostila;
 import ifnetpoo.Models.Professor;
@@ -10,6 +7,9 @@ import ifnetpoo.Models.Usuario;
 import ifnetpoo.Models.Disciplina;
 import ifnetpoo.Models.Livro;
 import ifnetpoo.Models.PaginaWeb;
+
+import ifnetpoo.Interfaces.IDatabaseConnection;
+import ifnetpoo.Interfaces.IMaterial;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,7 +65,7 @@ public class MaterialDAO {
     }
     
     // ADICIONA APOSTILA
-    public void adicionarMaterial(String titulo, String categoria, int idCriador, String area, int idDisciplina) {
+    public Apostila adicionarMaterial(String titulo, String categoria, Usuario criador, String area, Disciplina disciplina) {
         PreparedStatement stmt;
         
         try {
@@ -73,15 +73,17 @@ public class MaterialDAO {
                  + " values(?, ?, ?, ?, ?, 'apostila')");
             stmt.setString(1, titulo);
             stmt.setString(2, categoria);
-            stmt.setInt(3, idCriador);
+            stmt.setInt(3, criador.getId());
             stmt.setString(4, area);
-            stmt.setInt(5, idDisciplina);
+            stmt.setInt(5, disciplina.getId());
             stmt.execute();
         } catch (SQLException e) {}
+        
+        return new Apostila(titulo, categoria, criador, area, disciplina);
     }
     
     // ADICIONA WEB
-    public void adicionarMaterial(String titulo, String categoria, String url, int idCriador, int idDisciplina) {
+    public PaginaWeb adicionarMaterial(String titulo, String categoria, String url, Usuario criador, Disciplina disciplina) {
         PreparedStatement stmt;
         
         try {
@@ -90,14 +92,16 @@ public class MaterialDAO {
             stmt.setString(1, titulo);
             stmt.setString(2, categoria);
             stmt.setString(3, url);
-            stmt.setInt(4, idCriador);
-            stmt.setInt(5, idDisciplina);
+            stmt.setInt(4, criador.getId());
+            stmt.setInt(5, disciplina.getId());
             stmt.execute();
         } catch (SQLException e) {}
+        
+        return new PaginaWeb(titulo, categoria, criador, url, disciplina);
     }
     
     // ADICIONA LIVRO
-    public void adicionarMaterial(String titulo, String categoria, String autor, int edicao, int numeroDePaginas, int idCriador, int idDisciplina) {
+    public Livro adicionarMaterial(String titulo, String categoria, String autor, int edicao, int numeroDePaginas, Usuario criador, Disciplina disciplina) {
         PreparedStatement stmt;
         
         try {
@@ -108,28 +112,20 @@ public class MaterialDAO {
             stmt.setString(3, autor);
             stmt.setInt(4, edicao);
             stmt.setInt(5, numeroDePaginas);
-            stmt.setInt(6, idCriador);
-            stmt.setInt(7, idDisciplina);
+            stmt.setInt(6, criador.getId());
+            stmt.setInt(7, disciplina.getId());
             stmt.execute();
         } catch (SQLException e) {}
+        
+        return new Livro(titulo, categoria, criador, disciplina, autor, numeroDePaginas, edicao);
     }
     
-    public void removerMaterial(int index) {
-        var materiais = new ArrayList<IMaterial>();
+    public void removerMaterial(int id) {
         PreparedStatement stmt;
-        
-        materiais = this.getMateriais();
-        int size = materiais.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new ExcessaoItemNaoEncontrado("Material não foi encontrado");
-        }
-        
-        var materialSelecionado = materiais.get(index);
         
         try {
             stmt = this.conn.getConn().prepareStatement("delete from materiais where id = ?");
-            stmt.setInt(1, materialSelecionado.getId());
+            stmt.setInt(1, id);
             stmt.execute();
         } catch (SQLException e) {}
     }

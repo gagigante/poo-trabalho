@@ -1,7 +1,9 @@
 package ifnetpoo;
 
+import ifnetpoo.Controllers.MaterialController;
 import ifnetpoo.Controllers.AlunoController;
 import ifnetpoo.Controllers.AutenticacaoController;
+import ifnetpoo.Controllers.DisciplinaController;
 import ifnetpoo.Controllers.ProfessorController;
 import ifnetpoo.Models.Aluno;
 import ifnetpoo.Models.Professor;
@@ -12,8 +14,6 @@ import ifnetpoo.Models.Usuario;
 
 import ifnetpoo.Interfaces.IMaterial;
 
-import ifnetpoo.DAO.ProfessorDAO;
-import ifnetpoo.DAO.AlunoDAO;
 import ifnetpoo.DAO.DisciplinaDAO;
 import ifnetpoo.DAO.PesquisaDAO;
 import ifnetpoo.DAO.TrabalhoDAO;
@@ -35,9 +35,9 @@ public class IFNetPoo {
         AutenticacaoController autenticacaoController = new AutenticacaoController();
         ProfessorController professorController = new ProfessorController();
         AlunoController alunoController = new AlunoController();
+        DisciplinaController disciplinaController = new DisciplinaController();
+        MaterialController materialController = new MaterialController();
         
-        AlunoDAO alunoDAO = new AlunoDAO(new MySQLConnection());
-        ProfessorDAO professorDAO = new ProfessorDAO(new MySQLConnection());
         DisciplinaDAO disciplinaDAO = new DisciplinaDAO(new MySQLConnection());
         TrabalhoDAO trabalhoDAO = new TrabalhoDAO(new MySQLConnection());
         PesquisaDAO pesquisaDAO = new PesquisaDAO(new MySQLConnection());
@@ -52,36 +52,51 @@ public class IFNetPoo {
         
         final ArrayList<Professor> professores = new ArrayList<>();
         final ArrayList<Aluno> alunos = new ArrayList<>();
+        final ArrayList<Disciplina> disciplinas = new ArrayList<>();
         
         int professorSelecionado;
         int alunoSelecionado;
+        int disciplinaSelecionada;
+        int materialSelecionado;
       
+        String tipoUsuario;
+        
         String nome;
         String prontuario;
         String email;
         String area;
         
+        Disciplina disciplina = null;
+        
         String nomeDisciplina;
         String siglaDisciplina;
         
+        String tipoMaterial;
+        String nomeMaterial;
+        String categoriaMaterial;
+        String areaMaterial;
+        String autorMaterial;
+        int numeroDePaginasMaterial;
+        int edicaoMaterial;
+        String urlMaterial;
+        
         final ArrayList<Grupo> grupos = new ArrayList<>();
-        final ArrayList<Disciplina> disciplinas = new ArrayList<>();
         final ArrayList<IMaterial> materiais = new ArrayList<>();
         
         String grupoSelecinado;
-        String disciplinaSelecionada;
+        String disciplinaSelecionadaOld;
         
         String tipoGrupo;
         String nomeGrupo;
-        String materialSelecionado;
-        String tipoMaterial;
-        String nomeMaterial;
-        String categoria;
-        String autor;        
-        int numeroDePaginas;
-        int edicao;
-        String url;
-        Disciplina disciplina = null;
+        
+        
+        
+        
+         
+        
+        
+        
+        
   
         menu: while (true) {
             if (usuarioLogado != null) {
@@ -129,9 +144,7 @@ public class IFNetPoo {
             opcaoSelecionada = scanner.next();
 
             switch (opcaoSelecionada) {
-                case "1":
-                    String tipoUsuario;                    
-                    
+                case "1":                                                            
                     do {
                         System.out.println("Você é um aluno ou um professor?\n");
                         System.out.println("1 - Aluno");
@@ -343,55 +356,57 @@ public class IFNetPoo {
                     siglaDisciplina = scanner.next();
                     
                     try {
-                        disciplinaDAO.cadastraDisciplina(nomeDisciplina, siglaDisciplina);
+                        disciplinaController.store(nomeDisciplina, siglaDisciplina);
                     } catch (ExcessaoDuplicacao err) {
-                        System.out.println(err.getMessage());
+                        System.out.println("\n" + err.getMessage() + "\n");
                     }
                     
                     break;
                 case "10":
                     // LISTAR DISCIPLINAS
                     disciplinas.clear();
-                    disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                    disciplinas.addAll(disciplinaController.index());
                     
                     if (disciplinas.isEmpty()) {
                         System.out.println("Nenhuma disciplina cadastrada");
                         break;
                     }
                     
-                    System.out.println("\n-----------------------------------");
-                    for (Disciplina d : disciplinas) {
-                        System.out.println("Sigla: " + d.getSigla() + "; Nome: " + d.getNome());
+                    System.out.println();
+                    for (var d : disciplinas) {
                         System.out.println("-----------------------------------");
+                        System.out.println("Sigla: " + d.getSigla() + "; Nome: " + d.getNome());
                     }
+                    System.out.println("-----------------------------------\n");
                     
                     break;
                 case "11":
                     // EXCLUIR DISCIPLINA
                     disciplinas.clear();
-                    disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                    disciplinas.addAll(disciplinaController.index());
                   
                     if (disciplinas.isEmpty()) {
                         System.out.println("\nNenhuma disciplina cadastrada\n");
-                    } else {
-                        i = 1;
+                        break;
+                    }
+                    
+                    i = 1;
 
-                        System.out.println("\n\n");
-                        for (Disciplina d : disciplinas) {
-                            System.out.println("-----------------------------------");
-                            System.out.println(i + " - " + d.getNome());
-                            i++;
-                        }                        
-                        System.out.println("-----------------------------------\n");
+                    System.out.println("\n\n");
+                    for (var d : disciplinas) {
+                        System.out.println("-----------------------------------");
+                        System.out.println(i + " - " + d.getNome());
+                        i++;
+                    }                        
+                    System.out.println("-----------------------------------\n");
 
-                        System.out.println("Selecione a disciplina que deseja excluir: ");
-                        disciplinaSelecionada = scanner.next();
+                    System.out.println("Selecione a disciplina que deseja excluir: ");
+                    disciplinaSelecionada = Integer.parseInt(scanner.next()) - 1;
 
-                        try {
-                            disciplinaDAO.removerDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
-                        } catch (Error err) {
-                            System.out.println(err.getMessage());
-                        }
+                    try {
+                        disciplinaController.destroy(disciplinaSelecionada);
+                    } catch (ExcessaoItemNaoEncontrado err) {
+                        System.out.println(err.getMessage());
                     }
                     
                     break;
@@ -408,7 +423,7 @@ public class IFNetPoo {
                     }
                     
                     disciplinas.clear();
-                    disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                    disciplinas.addAll(disciplinaController.index());
                     i = 1;
                     
                     if (disciplinas.isEmpty()) {
@@ -425,10 +440,10 @@ public class IFNetPoo {
                     System.out.println("-----------------------------------\n");
 
                     System.out.println("Selecione a disciplina que deseja se matricular: ");
-                    disciplinaSelecionada = scanner.next();
+                    disciplinaSelecionadaOld = scanner.next();
                                        
                     try {
-                        disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
+                        disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionadaOld) - 1);
                         
                         disciplinaDAO.associaDiciplinaUsuario(disciplina.getSigla(), usuarioLogado.getProntuario());
                     } catch (Error err) {
@@ -466,10 +481,10 @@ public class IFNetPoo {
                     System.out.println("-----------------------------------\n");
 
                     System.out.println("Selecione a disciplina que deseja lecionar: ");
-                    disciplinaSelecionada = scanner.next();
+                    disciplinaSelecionadaOld = scanner.next();
                     
                     try {
-                        disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
+                        disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionadaOld) - 1);
                         
                         disciplinaDAO.associaDiciplinaUsuario(disciplina.getSigla(), usuarioLogado.getProntuario());
                     } catch (Error err) {
@@ -526,10 +541,10 @@ public class IFNetPoo {
                             System.out.println("-----------------------------------\n");
 
                             System.out.println("Selecione a disciplina: ");
-                            disciplinaSelecionada = scanner.next();                                                        
+                            disciplinaSelecionadaOld = scanner.next();                                                        
 
                             try {
-                                disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
+                                disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionadaOld) - 1);
 
                                 trabalhoDAO.criarGrupo(disciplina, nomeGrupo, usuarioLogado);
                             } catch (Error err) {
@@ -697,10 +712,10 @@ public class IFNetPoo {
                     System.out.println("-----------------------------------\n");
                             
                     System.out.println("Selecione a disciplina: ");
-                    disciplinaSelecionada = scanner.next();
+                    disciplinaSelecionadaOld = scanner.next();
                     
                     try {
-                        var disc = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
+                        var disc = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionadaOld) - 1);
                         
                         for (Grupo trabalho : trabalhoDAO.getGruposPorDisciplina(disc.getId())) {
                             System.out.println("-----------------------------------");
@@ -809,30 +824,31 @@ public class IFNetPoo {
                     } while (!"1".equals(tipoMaterial) && !"2".equals(tipoMaterial) && !"3".equals(tipoMaterial));
                     
                     disciplinas.clear();
-                    disciplinas.addAll(disciplinaDAO.getDisciplinas());
+                    disciplinas.addAll(disciplinaController.index());
                   
                     if (disciplinas.isEmpty()) {
                         System.out.println("\nNenhuma disciplina cadastrada\n");
-                    } else {
-                        i = 1;
+                        break;
+                    }
+                    
+                    i = 1;
+                    
+                    System.out.println("\n\n");                                        
+                    for (Disciplina d : disciplinas) {
+                        System.out.println("-----------------------------------");
+                        System.out.println(i + " - " + d.getNome());
+                        i++;
+                    }                        
+                    System.out.println("-----------------------------------\n");
 
-                        System.out.println("\n\n");
-                        for (Disciplina d : disciplinas) {
-                            System.out.println("-----------------------------------");
-                            System.out.println(i + " - " + d.getNome());
-                            i++;
-                        }                        
-                        System.out.println("-----------------------------------\n");
-                            
-                        System.out.println("Selecione a disciplina: ");
-                        disciplinaSelecionada = scanner.next();                                                        
-                            
-                        try {
-                            disciplina = disciplinaDAO.getDisciplinaPorIndex(Integer.parseInt(disciplinaSelecionada) - 1);
-                        } catch (ExcessaoItemNaoEncontrado err){
-                            System.out.println(err.getMessage());
-                            break;
-                        }
+                    System.out.println("Selecione a disciplina: ");
+                    disciplinaSelecionada = Integer.parseInt(scanner.next()) - 1;
+
+                    try {
+                        disciplina = disciplinaController.show(disciplinaSelecionada);
+                    } catch (ExcessaoItemNaoEncontrado err){
+                        System.out.println("\n" + err.getMessage() + "\n");
+                        break;
                     }
                     
                     // LIVRO
@@ -841,22 +857,18 @@ public class IFNetPoo {
                         nomeMaterial = scanner.next();
                         
                         System.out.println("Informe a categoria: ");
-                        categoria = scanner.next();
+                        categoriaMaterial = scanner.next();
                         
                         System.out.println("Informe o autor: ");
-                        autor = scanner.next();
+                        autorMaterial = scanner.next();
                         
                         System.out.println("Informe a quantidade de páginas: ");
-                        numeroDePaginas = Integer.parseInt(scanner.next());
+                        numeroDePaginasMaterial = Integer.parseInt(scanner.next());
                         
                         System.out.println("Informe a edição: ");
-                        edicao = Integer.parseInt(scanner.next());
-                        
-                        try {
-                            materialDAO.adicionarMaterial(nomeMaterial, categoria, autor, edicao, numeroDePaginas, usuarioLogado.getId(), disciplina.getId());
-                        } catch (Error err) {
-                            System.out.println(err.getMessage());
-                        }
+                        edicaoMaterial = Integer.parseInt(scanner.next());
+                                                
+                        materialController.store(nomeMaterial, categoriaMaterial, autorMaterial, edicaoMaterial, numeroDePaginasMaterial, usuarioLogado, disciplina);
                     }
                     
                     // APOSTILA
@@ -865,16 +877,12 @@ public class IFNetPoo {
                         nomeMaterial = scanner.next();
                         
                         System.out.println("Informe a categoria: ");
-                        categoria = scanner.next();
+                        categoriaMaterial = scanner.next();
                         
                         System.out.println("Informe a área da apostila: ");
-                        area = scanner.next();
+                        areaMaterial = scanner.next();
                         
-                        try {
-                            materialDAO.adicionarMaterial(nomeMaterial, categoria, usuarioLogado.getId(), area, disciplina.getId());
-                        } catch (Error err) {
-                            System.out.println(err.getMessage());
-                        }
+                        materialController.store(nomeMaterial, categoriaMaterial, usuarioLogado, areaMaterial, disciplina);
                     }
                     
                     // PÁGINA WEB
@@ -883,67 +891,61 @@ public class IFNetPoo {
                         nomeMaterial = scanner.next();
                         
                         System.out.println("Informe a categoria: ");
-                        categoria = scanner.next();
+                        categoriaMaterial = scanner.next();
                         
                         System.out.println("Informe a url da página: ");
-                        url = scanner.next();
+                        urlMaterial = scanner.next();
                         
-                        disciplinas.clear();
-                        disciplinas.addAll(disciplinaDAO.getDisciplinas());
-                  
-                        try {
-                            materialDAO.adicionarMaterial(nomeMaterial, categoria, url, usuarioLogado.getId(), disciplina.getId());
-                        } catch (Error err) {
-                            System.out.println(err.getMessage());
-                        }
+                        materialController.store(nomeMaterial, categoriaMaterial, urlMaterial, usuarioLogado, disciplina);
                     }
                     
                     break;
                 case "21":
                    // EXCLUIR MATERIAL
                    materiais.clear();
-                   materiais.addAll(materialDAO.getMateriais());
+                   materiais.addAll(materialController.index());
                   
                     if (materiais.isEmpty()) {
                         System.out.println("\nNenhum material cadastrado\n");
-                    } else {
-                        i = 1;
+                        break;
+                    }
+                    
+                    i = 1;
 
-                        System.out.println("\n\n");
-                        for (IMaterial m : materiais) {
-                            System.out.println("-----------------------------------");
-                            System.out.println(i + " - " + m.getOverviewMaterial());
-                            i++;
-                        }                        
-                        System.out.println("-----------------------------------\n");
-                                  
-                        System.out.println("Selecione o material que deseja excluir: ");
-                        materialSelecionado = scanner.next();
-                            
-                        try {
-                            materialDAO.removerMaterial(Integer.parseInt(materialSelecionado) - 1);
-                        } catch (Error err) {
-                            System.out.println(err.getMessage());
-                        }
+                    System.out.println("\n\n");
+                    for (IMaterial m : materiais) {
+                        System.out.println("-----------------------------------");
+                        System.out.println(i + " - " + m.getOverviewMaterial());
+                        i++;
+                    }                        
+                    System.out.println("-----------------------------------\n");
+
+                    System.out.println("Selecione o material que deseja excluir: ");
+                    materialSelecionado = Integer.parseInt(scanner.next()) - 1;
+
+                    try {
+                        materialController.destroy(materialSelecionado);
+                    } catch (ExcessaoItemNaoEncontrado err) {
+                        System.out.println("\n" + err.getMessage() + "\n");
                     }
                     
                     break;
                 case "22":
                     // LISTAR MATERIAIS
                     materiais.clear();
-                    materiais.addAll(materialDAO.getMateriais());
+                    materiais.addAll(materialController.index());
                     
                     if (materiais.isEmpty()) {
                         System.out.println("\nNenhum material cadastrado\n");
                         break;
                     }
                     
-                    for (IMaterial m : materiais) {
+                    materiais.forEach(material -> {
                         System.out.println("-----------------------------------");
-                        System.out.println(m.getOverviewMaterial());
-                    }
+                        System.out.println(material.getOverviewMaterial());
+                    });
                     System.out.println("-----------------------------------\n");
-                    
+                                        
                     break;
                 case "0":
                     break menu;
@@ -951,6 +953,6 @@ public class IFNetPoo {
                     System.out.println("\nOpção inválida\n");
                     break;
             }
-        };
+        }
     }
 }
