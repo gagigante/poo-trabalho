@@ -61,6 +61,10 @@ public abstract class Grupo implements Comparable<Grupo>{
 
     @Override
     public int compareTo(Grupo grupo) {
-        return this.quantidadeAlunos >= grupo.getQuantidadeAlunos() ? 1 : 0;
+        if (this.quantidadeAlunos == grupo.getQuantidadeAlunos()) {
+            return 0;
+        }
+        
+        return this.quantidadeAlunos >= grupo.getQuantidadeAlunos() ? -1 : 1;
     }
 }

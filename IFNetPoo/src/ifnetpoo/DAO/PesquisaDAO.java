@@ -1,12 +1,13 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
-import ifnetpoo.Interfaces.IDatabaseConnection;
 import ifnetpoo.Models.Pesquisa;
 import ifnetpoo.Models.Professor;
 import ifnetpoo.Models.Usuario;
 import ifnetpoo.Models.Aluno;
 
+import ifnetpoo.Interfaces.IDatabaseConnection;
+
+import ifnetpoo.CustomExceptions.ExcessaoUsuarioJaAssociado;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,10 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PesquisaDAO {
-    private IDatabaseConnection conn;
-    
-    // PROVISORIO
-    private final ArrayList<Pesquisa> gruposPesquisa = new ArrayList<>();
+    private IDatabaseConnection conn;    
     
     public PesquisaDAO(IDatabaseConnection conn) {
         this.conn = conn;
@@ -38,7 +36,7 @@ public class PesquisaDAO {
             while (rs.next()) {
                 var criador = new Professor(rs.getInt("id_usuario"), rs.getString("nome"), rs.getString("prontuario"), rs.getString("email"), rs.getString("area"));
             
-                var grupo = new Pesquisa(rs.getInt("id"), criador, rs.getString("nome"));
+                var grupo = new Pesquisa(rs.getInt("id"), criador, rs.getString("titulo"));
                 grupos.add(grupo);
             }
         } catch (SQLException e) {}
@@ -71,18 +69,7 @@ public class PesquisaDAO {
         
         return grupos;
     }
-    
-    public Pesquisa getGrupoPorIndex(int index) {
-        var grupos = this.getGrupos();
-        var size = grupos.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new Error("Grupo não encontrado");
-        }
-        
-        return grupos.get(index); 
-    }
-     
+  
     public Pesquisa criarGrupo(Usuario orientador, String nome) {
         PreparedStatement stmt;
          
@@ -91,38 +78,50 @@ public class PesquisaDAO {
             stmt.setString(1, nome);
             stmt.setInt(2, orientador.getId());
             stmt.execute();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+        } catch (SQLException e) {}
         
         Pesquisa novoGrupo = new Pesquisa(orientador, nome);
         
         return novoGrupo;
     }
     
-    public void removerGrupoPorIndex(int index) {
-        var grupos = new ArrayList<Pesquisa>();
+    public void removerGrupo(int id) {
         PreparedStatement stmt;
-        
-        grupos = this.getGrupos();
-        int size = grupos.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new ExcessaoItemNaoEncontrado("Grupo não foi encontrado");
-        }
-        
-        var grupoSelecionado = grupos.get(index);
         
         try {
             stmt = this.conn.getConn().prepareStatement("delete from grupos where id = ?");
-            stmt.setInt(1, grupoSelecionado.getId());
+            stmt.setInt(1, id);
             stmt.execute();
-        } catch (SQLException e) {}    
+        } catch (SQLException e) {}
+    }
+    
+    public boolean isUsuarioAssociadoComGrupo(int idGrupo, int idUsuario) {
+        PreparedStatement stmt;
+        ResultSet rs=null;
+        
+        try {
+            stmt = this.conn.getConn().prepareStatement("select * from alunos_grupos where grupo_id = ? and aluno_id = ?;");
+            stmt.setInt(1, idGrupo);
+            stmt.setInt(2, idUsuario);
+            rs = stmt.executeQuery();
+            
+            if (!rs.next()) {
+                return false;
+            }
+            
+            return true;
+        } catch (SQLException e) {}
+         
+        return false;
     }
     
     public void cadastraAlunoEmGrupo(Aluno aluno, Pesquisa grupo) {
         PreparedStatement stmt;
          
+        if (this.isUsuarioAssociadoComGrupo(grupo.getId(), aluno.getId())){
+            throw new ExcessaoUsuarioJaAssociado("Usuário já associado com esse grupo");
+        }
+        
         try {
             stmt = this.conn.getConn().prepareStatement("insert into alunos_grupos (aluno_id, grupo_id) values(?, ?)");
             stmt.setInt(1, aluno.getId());

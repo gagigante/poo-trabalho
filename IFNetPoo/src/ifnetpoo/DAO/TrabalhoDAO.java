@@ -1,12 +1,14 @@
 package ifnetpoo.DAO;
 
-import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
-import ifnetpoo.Interfaces.IDatabaseConnection;
 import ifnetpoo.Models.Trabalho;
 import ifnetpoo.Models.Usuario;
 import ifnetpoo.Models.Disciplina;
 import ifnetpoo.Models.Professor;
 import ifnetpoo.Models.Aluno;
+
+import ifnetpoo.Interfaces.IDatabaseConnection;
+
+import ifnetpoo.CustomExceptions.ExcessaoUsuarioJaAssociado;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,9 +17,6 @@ import java.util.ArrayList;
 
 public class TrabalhoDAO {
     private IDatabaseConnection conn;
-    
-    // PROVISORIO
-    private final ArrayList<Trabalho> gruposTrabalho = new ArrayList<>();
     
     public TrabalhoDAO(IDatabaseConnection conn) {
         this.conn = conn;
@@ -42,12 +41,9 @@ public class TrabalhoDAO {
                 var disciplina = new Disciplina(rs.getInt("disciplina_id"), rs.getString("nome_disciplina"), rs.getString("sigla_disciplina"));
                 
                 var grupo = new Trabalho(rs.getInt("id"), disciplina, rs.getString("titulo"), criador);
-                System.out.println(grupo.getId());
                 grupos.add(grupo);
             }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+        } catch (SQLException e) {}
         
         return grupos;
     }
@@ -81,17 +77,6 @@ public class TrabalhoDAO {
         return grupos;
     }
     
-    public Trabalho getGrupoPorIndex(int index) {
-        var grupos = this.getGrupos();
-        int size = grupos.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new Error("Grupo não encontrado");
-        }
-        
-        return grupos.get(index); 
-    }
-    
     public Trabalho criarGrupo(Disciplina disciplina, String nome, Usuario criador) {
         PreparedStatement stmt;
          
@@ -106,33 +91,16 @@ public class TrabalhoDAO {
         var novoGrupo = new Trabalho(disciplina, nome, criador);
         
         return novoGrupo;
-    }
+    }    
     
-    public void removerGrupoPorIndex(int index) {
-        System.out.println("Exluir: " + index);
-        
-        var grupos = new ArrayList<Trabalho>();
+    public void removerGrupo(int id) {
         PreparedStatement stmt;
-        
-        grupos = this.getGrupos();
-        int size = grupos.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new ExcessaoItemNaoEncontrado("Grupo não foi encontrado");
-        }
-        
-        var grupoSelecionado = grupos.get(index);
-        
-        System.out.println(grupoSelecionado.getGrupoOverview());
-        System.out.println(grupoSelecionado.getId());
         
         try {
             stmt = this.conn.getConn().prepareStatement("delete from grupos where id = ?");
-            stmt.setInt(1, grupoSelecionado.getId());
+            stmt.setInt(1, id);
             stmt.execute();
-        } catch (SQLException e) {
-            System.out.println(e);
-        } 
+        } catch (SQLException e) {}
     }
     
     public ArrayList<Trabalho> getGruposPorDisciplina(int disciplina_id) {
@@ -155,38 +123,45 @@ public class TrabalhoDAO {
                 var disciplina = new Disciplina(rs.getInt("disciplina_id"), rs.getString("nome_disciplina"), rs.getString("sigla_disciplina"));
                 
                 var grupo = new Trabalho(rs.getInt("id"), disciplina, rs.getString("titulo"), criador);
-                System.out.println(grupo.getId());
                 grupos.add(grupo);
             }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+        } catch (SQLException e) {}
         
         return grupos;
+    }
+    
+    public boolean isUsuarioAssociadoComGrupo(int idGrupo, int idUsuario) {
+        PreparedStatement stmt;
+        ResultSet rs=null;
         
-//        ArrayList<Trabalho> gruposFiltrados = new ArrayList<>();
-//        
-//        this.gruposTrabalho.stream().filter(grupo -> (grupo.getDiciplina().compareTo(disciplina) == 1)).forEachOrdered(grupo -> {
-//            gruposFiltrados.add(grupo);
-//        });
-//        
-//        if (gruposFiltrados.isEmpty()) {
-//            throw new Error("Nenhum grupo dessa disciplina foi encontrado");
-//        }
-//        
-//        return gruposFiltrados;
+        try {
+            stmt = this.conn.getConn().prepareStatement("select * from alunos_grupos where grupo_id = ? and aluno_id = ?;");
+            stmt.setInt(1, idGrupo);
+            stmt.setInt(2, idUsuario);
+            rs = stmt.executeQuery();
+            
+            if (!rs.next()) {
+                return false;
+            }
+            
+            return true;
+        } catch (SQLException e) {}
+         
+        return false;
     }
     
     public void cadastraAlunoEmGrupo(Aluno aluno, Trabalho grupo) {
         PreparedStatement stmt;
-         
+        
+        if (this.isUsuarioAssociadoComGrupo(grupo.getId(), aluno.getId())){
+            throw new ExcessaoUsuarioJaAssociado("Usuário já associado com esse grupo");
+        }
+        
         try {
             stmt = this.conn.getConn().prepareStatement("insert into alunos_grupos (aluno_id, grupo_id) values(?, ?)");
             stmt.setInt(1, aluno.getId());
             stmt.setInt(2, grupo.getId());
             stmt.execute();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
+        } catch (SQLException e) {}
     }
 }
