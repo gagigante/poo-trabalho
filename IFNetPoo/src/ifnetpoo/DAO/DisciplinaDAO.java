@@ -1,9 +1,12 @@
 package ifnetpoo.DAO;
 
 import ifnetpoo.Models.Disciplina;
+
+import ifnetpoo.Interfaces.IDatabaseConnection;
+
 import ifnetpoo.CustomExceptions.ExcessaoDuplicacao;
 import ifnetpoo.CustomExceptions.ExcessaoItemNaoEncontrado;
-import ifnetpoo.Interfaces.IDatabaseConnection;
+import ifnetpoo.CustomExceptions.ExcessaoUsuarioJaAssociado;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -84,24 +87,14 @@ public class DisciplinaDAO {
         return novaDisciplina;
     }
     
-    public void removerDisciplinaPorIndex(int index) {
-        var disciplinas = new ArrayList<Disciplina>();
+    public void removerDisciplina(int id) {
         PreparedStatement stmt;
         
-        disciplinas = this.getDisciplinas();
-        int size = disciplinas.size();
-        
-        if (index < 0 || index > size - 1) {
-            throw new ExcessaoItemNaoEncontrado("Disciplina não foi encontrada");
-        }
-        
-        var disciplinaSelecionada = disciplinas.get(index);
-        
         try {
-            stmt = this.conn.getConn().prepareStatement("delete from disciplinas where sigla = ?");
-            stmt.setString(1, disciplinaSelecionada.getSigla());
+            stmt = this.conn.getConn().prepareStatement("delete from disciplinas where id = ?");
+            stmt.setInt(1, id);
             stmt.execute();
-        } catch (SQLException e) {}
+        } catch (SQLException e) {}   
     }
     
     public ArrayList<Disciplina> getDisciplinasUsuario(String prontuario) {              
@@ -175,7 +168,7 @@ public class DisciplinaDAO {
         } catch (SQLException e) {}
         
         if (this.isUsuarioAssociadoComDisciplina(idDisciplina, idUsuario)){
-            throw new Error("Usuário já associado com essa disciplina");
+            throw new ExcessaoUsuarioJaAssociado("Usuário já associado com essa disciplina");
         }
         
         try {
